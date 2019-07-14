@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "Brave Heart",
+  "description": "Directly reward web producers with Bitcoin Cash and no trusted intermediaries",
+  "version": "0.1",
+  "permissions": [
+    "tabs", "activeTab", "storage"
+  ],
+  "background": {
+    "scripts": [ "background.js" ],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "Brave Heart",
+    "default_popup": "pages/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

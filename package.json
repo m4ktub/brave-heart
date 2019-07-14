@@ -1,0 +1,32 @@
+{
+  "name": "brave-heart",
+  "version": "0.1.0",
+  "description": "A chrome extension to directly reward web producers with no trusted intermediaries",
+  "author": "Cláudio Gil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:m4ktub/brave-heart.git"
+  },
+  "scripts": {
+    "build": "npm run webpack",
+    "webpack": "webpack --mode production",
+    "watch": "webpack --watch --mode development"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.86",
+    "copy-webpack-plugin": "^5.0.3",
+    "css-loader": "^3.0.0",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.2",
+    "vue-loader": "^15.7.0",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5",
+    "webpack-extension-reloader": "^1.1.0"
+  },
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-awesome": "^3.5.4"
+  }
+}

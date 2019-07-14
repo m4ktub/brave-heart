@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es6",
+        "rootDir": "src",
+        "noEmitOnError": true,
+        "allowSyntheticDefaultImports": true,
+        "types": [ "chrome" ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
