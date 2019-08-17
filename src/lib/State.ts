@@ -1,7 +1,11 @@
 import { Contributable } from "./Contributable";
 
 class UsedContributable {
-    constructor(readonly contributable: Contributable, public seconds: number = 0) {
+    paid: number;
+    seconds: number;
+    constructor(readonly contributable: Contributable) {
+        this.paid = 0;
+        this.seconds = 0;
     }
 }
 
@@ -10,15 +14,15 @@ export interface UsageMap {
 }
 
 export class Period {
-    readonly start: Date;
-    readonly end: Date;
+    readonly start: String;
+    readonly end?: String;
     readonly usage: UsageMap;
     
     constructor() {
         const now = new Date();
         
-        this.start = new Date(now.getFullYear(), now.getMonth(), 1);
-        this.end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59 );
+        this.start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        this.end = null;
         this.usage = {};
     }
     
@@ -49,9 +53,11 @@ interface StorageChanges {
 export class PersistentState {
     currentPeriod: Period;
     settings: Settings;
+    previousPeriods: Period[];
 
     constructor() {
         this.currentPeriod = new Period();
+        this.previousPeriods = [];
         this.settings = {
             currency: 'USD',
             minAmount: 0.1
