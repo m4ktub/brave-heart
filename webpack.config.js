@@ -27,7 +27,14 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loaders: 'vue-loader'
+        use: [{
+            loader: 'vue-loader',
+            options: {
+                compilerOptions: {
+                    whitespace: 'condense'
+                }
+            }
+        }]
       },
       {
         test: /\.tsx?$/,
