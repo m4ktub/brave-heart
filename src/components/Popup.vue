@@ -9,7 +9,7 @@
       <span class="nav settings">*</span>
     </div>
     <div class="usage">
-      <p v-for="usage in visiblePeriod.usage">
+      <p v-for="usage in visiblePeriod.usage" v-bind:key="usage.index">
         {{ usage.seconds }} {{ usage.contributable.content.title }}
       </p>
     </div>
@@ -57,7 +57,7 @@ export default {
 
 .header span {
   display: inline-block;
-  heigth: 30px;
+  height: 30px;
 }
 
 .header .nav {
