@@ -2,6 +2,9 @@ import { Contributable } from "./lib/Contributable";
 import { MessageType, Message, ContributableFoundMessage } from "./lib/Messages";
 import { WebsiteScannerInstance } from "./lib/Scanners";
 
+// list of scanners to run
+const availableScanners = [ WebsiteScannerInstance ];
+
 // register message dispatcher
 chrome.runtime.onMessage.addListener(onRuntimeMessage);
 
@@ -22,11 +25,10 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
 
 // scan page for contributable content
 function scan() {
-    const available = [ WebsiteScannerInstance ];
-    const accepting = available.filter(m => m.accepts(document))
+    const acceptingScanners = availableScanners.filter(m => m.accepts(document))
     
     var contributable: Contributable = null;
-    for (let scanner of accepting) {
+    for (let scanner of acceptingScanners) {
         contributable = scanner.scan(document);
         if (contributable) {
             break;
@@ -38,3 +40,6 @@ function scan() {
         chrome.runtime.sendMessage(ContributableFoundMessage.carrying(contributable));
     }
 }
+
+// ensure periodic scan
+setInterval(() => scan(), 10000);

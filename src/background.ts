@@ -32,7 +32,7 @@ function monitor() {
             return;
         }
         
-        state.currentPeriod.addUsage(contributable, 1);
+        state.currentPeriod.trackUsage(contributable, 1);
         state.save();
     }
     

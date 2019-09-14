@@ -1,6 +1,6 @@
-import { Contributable } from "./Contributable";
+import { Contributable, Account, Content } from "./Contributable";
 
-class UsedContributable {
+export class UsedContributable {
     paid: number;
     seconds: number;
     constructor(readonly contributable: Contributable) {
@@ -15,8 +15,9 @@ export interface UsageMap {
 
 export class Period {
     readonly start: String;
-    readonly end?: String;
     readonly usage: UsageMap;
+    end?: String;
+    paid: boolean;
     
     constructor() {
         const now = new Date();
@@ -24,16 +25,23 @@ export class Period {
         this.start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
         this.end = null;
         this.usage = {};
+        this.paid = false;
     }
     
-    addUsage(contributable: Contributable, seconds: number = 0) {
+    trackUsage(contributable: Contributable, seconds: number = 0) {
         let usage = this.usage[contributable.id];
         if (! usage) {
             usage = this.usage[contributable.id] = new UsedContributable(contributable);
         }
         
+        // add usage
         usage.seconds += seconds;
-        return usage;
+        
+        // update contributable mutable details
+        usage.contributable.content.title = contributable.content.title;
+        if (usage.contributable.account && contributable.account) {
+            usage.contributable.account.name = contributable.account.name;
+        }
     }
     
     remove(contributable: Contributable) {
@@ -44,6 +52,7 @@ export class Period {
 export interface Settings {
     currency: string;
     minAmount: number;
+    excludedUrls: string[];
 }
 
 interface StorageChanges { 
@@ -60,7 +69,8 @@ export class PersistentState {
         this.previousPeriods = [];
         this.settings = {
             currency: 'USD',
-            minAmount: 0.1
+            minAmount: 0.1,
+            excludedUrls: []
         };
         
         this.load();
@@ -86,7 +96,14 @@ export class PersistentState {
         Object.setPrototypeOf(this.currentPeriod, Period.prototype);
         Object.keys(this.currentPeriod.usage).map(k => this.currentPeriod.usage[k]).forEach(tc => {
             Object.setPrototypeOf(tc, UsedContributable.prototype);
+            Object.setPrototypeOf(tc.contributable, Contributable.prototype);
+            Object.setPrototypeOf(tc.contributable.content, Content.prototype);
+            if (tc.contributable.account) {
+                Object.setPrototypeOf(tc.contributable.account, Account.prototype);
+            }
         });
+
+        this.settings.excludedUrls = this.settings.excludedUrls || [];
     }
     
     save(callback?: () => void) {
