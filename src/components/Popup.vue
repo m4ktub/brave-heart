@@ -6,7 +6,9 @@
       <span class="title">
         <span class="text">{{ visiblePeriod.start }} - {{ visiblePeriod.end }} ({{ visibleUsage.seconds }})</span>
       </span>
-      <span class="nav settings">*</span>
+      <span class="nav settings">
+        <a v-on:click="openOptions">*</a>
+      </span>
     </div>
     <div class="usage">
       <p v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
@@ -42,6 +44,9 @@ export default {
         state.settings.excludedUrls.push(producer.url);
       }
       state.save();
+    },
+    openOptions() {
+      chrome.runtime.openOptionsPage();
     }
   },
   computed: {
