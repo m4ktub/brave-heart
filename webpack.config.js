@@ -59,7 +59,8 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: 'manifest.json' },
-      { from: 'pages/**/*.html' }
+      { from: 'pages/**/*.html' },
+      { from: 'images/**/*.*' }
     ])
   ]
 };
