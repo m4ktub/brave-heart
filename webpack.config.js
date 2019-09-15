@@ -15,7 +15,8 @@ module.exports = {
     'background': './background.ts',
     'content': './content.ts',
     'pages/popup': './pages/popup.js',
-    'pages/options': './pages/options.js'
+    'pages/options': './pages/options.js',
+    'pages/contribute': './pages/contribute.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist/unpacked'),

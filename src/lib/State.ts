@@ -20,14 +20,16 @@ export class Period {
     paid: boolean;
     
     constructor() {
-        const now = new Date();
-        
-        this.start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        this.start = new Date().toISOString();
         this.end = null;
         this.usage = {};
         this.paid = false;
     }
-    
+
+    close() {
+        this.end = new Date().toISOString();
+    }
+
     trackUsage(contributable: Contributable, seconds: number = 0) {
         let usage = this.usage[contributable.id];
         if (! usage) {
@@ -106,6 +108,13 @@ export class PersistentState {
         this.settings.excludedUrls = this.settings.excludedUrls || [];
     }
     
+    startNewPeriod(): Period {
+        this.currentPeriod.close();
+        this.previousPeriods.push(this.currentPeriod);
+        this.currentPeriod = new Period();
+        return this.currentPeriod;
+    }
+
     save(callback?: () => void) {
         chrome.storage.local.set({ state: this }, callback);
     }

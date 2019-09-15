@@ -21,7 +21,7 @@
       </p>
     </div>
     <div class="contribute">
-        <button>Contribute</button>
+        <button v-on:click="openContribute">Contribute</button>
     </div>
   </div>
 </template>
@@ -47,6 +47,9 @@ export default {
     },
     openOptions() {
       chrome.runtime.openOptionsPage();
+    },
+    openContribute() {
+      window.open(chrome.runtime.getURL("pages/contribute.html"));
     }
   },
   computed: {
