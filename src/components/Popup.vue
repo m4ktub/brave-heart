@@ -1,14 +1,18 @@
 <template>
   <div class="popup">
     <div class="header">
-      <span class="nav back">&lt;</span>
-      <span class="nav forward">&gt;</span>
-      <span class="title">
+      <div class="nav back">
+        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod">&lt;</a>
+      </div>
+      <div class="nav forward">
+        <a v-on:click="nextPeriod" v-if="hasNextPeriod">&gt;</a>
+      </div>
+      <div class="title">
         <span class="text">{{ visiblePeriod.start }} - {{ visiblePeriod.end }} ({{ visibleUsage.seconds }})</span>
-      </span>
-      <span class="nav settings">
+      </div>
+      <div class="nav settings">
         <a v-on:click="openOptions">*</a>
-      </span>
+      </div>
     </div>
     <div class="usage">
       <p v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
@@ -21,7 +25,7 @@
       </p>
     </div>
     <div class="contribute">
-        <button v-on:click="openContribute">Contribute</button>
+        <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">Contribute</button>
     </div>
   </div>
 </template>
@@ -34,7 +38,8 @@ import { UiUsage, UiProducer } from "./Ui";
 export default {
   data() {
     return {
-      state: new PersistentState()
+      state: new PersistentState(),
+      index: 0
     }
   },
   methods: {
@@ -50,15 +55,36 @@ export default {
     },
     openContribute() {
       window.open(chrome.runtime.getURL("pages/contribute.html"));
+    },
+    prevPeriod() {
+      this.index++;
+    },
+    nextPeriod() {
+      this.index--;
     }
   },
   computed: {
+    hasNextPeriod() {
+      return this.index > 0;
+    },
+    hasPreviousPeriod() {
+      let state: PersistentState = this.state;
+      return this.index < state.previousPeriods.length;
+    },
     visiblePeriod() {
-      return this.state.currentPeriod;
+      let state: PersistentState = this.state;
+      return this.index == 0
+        ? state.currentPeriod
+        : state.previousPeriods[state.previousPeriods.length - this.index];
     },
     visibleUsage() {
       let state: PersistentState = this.state;
-      return new UiUsage(state.currentPeriod.usage, state.settings);
+      let period: Period = this.visiblePeriod;
+      return new UiUsage(period.usage, state.settings);
+    },
+    isPeriodPaid() {
+      let period: Period = this.visiblePeriod;
+      return period.paid;
     }
   }
 }
@@ -81,21 +107,22 @@ export default {
   background: pink;
 }
 
-.header span {
-  display: inline-block;
-  height: 30px;
-}
-
 .header .nav {
   width: 30px;
-  line-height: 30px;
+  height: 30px;
+  line-height: 30px;  
   text-align: center;
-  
+  display: inline-block;
   background: lightgray;
 }
 
 .header .title {
+  display: inline-block;
   width: 310px;
+  height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header .title .text {
