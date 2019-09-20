@@ -1,6 +1,8 @@
 <template>
   <div class="contribute">
     <h1>Contribute</h1>
+    <usage v-bind:period="paymentPeriod">
+    </usage>
     <button v-on:click="pay" :disabled="paymentPeriod.paid">Pay</button>
   </div>
 </template>

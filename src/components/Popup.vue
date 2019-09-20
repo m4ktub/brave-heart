@@ -14,16 +14,11 @@
         <a v-on:click="openOptions">*</a>
       </div>
     </div>
-    <div class="usage">
-      <p v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
-        <img :src="'chrome://favicon/size/16/' + producer.url">
-        <span class="title">{{ producer.title }}</span>
-        <span class="time">{{ producer.seconds }}</span>
-        <span class="actions">
+    <usage v-bind:period="visiblePeriod">
+      <template v-slot:actions="{ producer }">
           <a v-on:click="excludeProducer(producer)">x</a>
-        </span>
-      </p>
-    </div>
+      </template>
+    </usage>
     <div class="contribute">
         <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">Contribute</button>
     </div>
