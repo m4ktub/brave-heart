@@ -2,16 +2,22 @@
   <div class="popup">
     <div class="header">
       <div class="nav back">
-        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod">&lt;</a>
+        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod">
+          <fa-icon icon="chevron-left"/>
+        </a>
       </div>
       <div class="nav forward">
-        <a v-on:click="nextPeriod" v-if="hasNextPeriod">&gt;</a>
+        <a v-on:click="nextPeriod" v-if="hasNextPeriod">
+          <fa-icon icon="chevron-right"/>
+        </a>
       </div>
       <div class="title">
         <span class="text">{{ visiblePeriod.start }} - {{ visiblePeriod.end }} ({{ visibleUsage.seconds }})</span>
       </div>
       <div class="nav settings">
-        <a v-on:click="openOptions">*</a>
+        <a v-on:click="openOptions">
+          <fa-icon icon="sliders-h"/>
+        </a>
       </div>
     </div>
     <usage v-bind:period="visiblePeriod">
