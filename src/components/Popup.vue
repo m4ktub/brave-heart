@@ -12,7 +12,9 @@
         </a>
       </div>
       <div class="title">
-        <span class="text">{{ visiblePeriod.start }} - {{ visiblePeriod.end }} ({{ visibleUsage.seconds }})</span>
+        <span class="text">
+          {{ [visiblePeriod.start, visiblePeriod.end] | asDateRange }}
+          ({{ visibleUsage.seconds | asDuration }})</span>
       </div>
       <div class="nav settings">
         <a v-on:click="openOptions">
@@ -35,6 +37,9 @@
 import { PersistentState, UsedContributable, Period, UsageMap, Settings } from "../lib/State";
 import { Account } from "../lib/Contributable";
 import { UiUsage, UiProducer } from "./Ui";
+import { TimeFormatter } from '../lib/Time';
+
+const formatter = new TimeFormatter();
 
 export default {
   data() {
@@ -86,6 +91,17 @@ export default {
     isPeriodPaid() {
       let period: Period = this.visiblePeriod;
       return period.paid;
+    },
+    totalTimeString() {
+      return formatter.duration(this.visibleUsage.seconds);
+    }
+  },
+  filters: {
+    asDuration(seconds) {
+      return formatter.duration(seconds);
+    },
+    asDateRange([start, end]) {
+      return formatter.range(start, end);
     }
   }
 }
