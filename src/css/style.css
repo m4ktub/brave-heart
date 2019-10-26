@@ -91,26 +91,38 @@ body {
 }
 
 .usage .line .right .top {
-  display: block;
+  display: flex;
   height: 22px;
 }
 
 .usage .line .right .bottom {
-  display: block;
+  display: flex;
   height: 22px;
 }
 
 .usage .title {
+  flex: 100%;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .usage .time {
-  float: right;
+  flex: none;
   margin-right: 4px;
 }
 
+.usage .url {
+  flex: 100%;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .usage .actions {
-  float: right;
+  flex: none;
   margin-right: 4px;
   display: none;
 }

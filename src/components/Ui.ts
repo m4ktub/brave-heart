@@ -85,15 +85,16 @@ export class UiProducer {
     readonly contents: UsedContributable[];
 
     constructor(readonly site: string, readonly account: Account, contents: UsedContributable[]) {
-        if (account) {
-            this.title = account.name;
-            this.url = account.url;
-        } else {
-            this.title = site;
-            this.url = site;
-        }
-
         this.contents = sortBySecondsDesc(contents);
         this.seconds = sumSeconds(contents);
+
+        if (this.contents.length == 1) {
+            let c = this.contents[0].contributable;
+            this.title =  c.account ? c.account.name : c.content.title;
+            this.url = c.content.url;
+        } else {
+            this.title = account ? account.name : site;
+            this.url = account ? account.url : site;
+        }
     }
 }
