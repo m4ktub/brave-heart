@@ -2,12 +2,12 @@
   <div class="popup">
     <div class="header">
       <div class="nav back">
-        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod">
+        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod" class="button">
           <fa-icon icon="chevron-left"/>
         </a>
       </div>
       <div class="nav forward">
-        <a v-on:click="nextPeriod" v-if="hasNextPeriod">
+        <a v-on:click="nextPeriod" v-if="hasNextPeriod" class="button">
           <fa-icon icon="chevron-right"/>
         </a>
       </div>
@@ -17,14 +17,16 @@
           ({{ visibleUsage.seconds | asDuration }})</span>
       </div>
       <div class="nav settings">
-        <a v-on:click="openOptions">
+        <a v-on:click="openOptions" class="button">
           <fa-icon icon="sliders-h"/>
         </a>
       </div>
     </div>
     <usage v-bind:period="visiblePeriod">
       <template v-slot:actions="{ producer }">
-          <a v-on:click="excludeProducer(producer)">x</a>
+          <a v-on:click="excludeProducer(producer)" class="button action">
+            <fa-icon icon="ban"/>
+          </a>
       </template>
     </usage>
     <div class="contribute">
@@ -109,19 +111,22 @@ export default {
 
 <style>
 .popup div {
-   display: inline-block;
-   vertical-align: top;
-   zoom: 1;
-   margin: 0px;
-   outline: none;
-   overflow: auto;
+  display: inline-block;
+  vertical-align: top;
+  zoom: 1;
+  margin: 0px;
+  outline: none;
+  overflow: auto;
+}
+
+.popup {
+  background-color: #f7f7f7;
 }
 
 .header {
   width: 100%;
   height: 30px;
-  
-  background: pink;
+  background-color: rgba(10, 193, 141, 0.5);
 }
 
 .header .nav {
@@ -130,7 +135,6 @@ export default {
   line-height: 30px;  
   text-align: center;
   display: inline-block;
-  background: lightgray;
 }
 
 .header .title {
@@ -149,9 +153,7 @@ export default {
 
 .usage {
   width: 100%;
-  height: 240px;
-  
-  background: lime;
+  height: 240px;  
 }
 
 .contribute {
@@ -159,7 +161,18 @@ export default {
   height: 30px;
   text-align: center;
   line-height: 30px;
+}
 
-  background: orange;
+.button {
+  display: inline-block;
+}
+
+.nav .button {
+  width: 100%;
+}
+
+.nav .button:hover {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
 }
 </style>
