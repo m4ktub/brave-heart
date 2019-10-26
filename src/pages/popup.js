@@ -1,4 +1,5 @@
 import Vue from "vue";
+import "../css/style.css";
 
 import * as fa from "@fortawesome/vue-fontawesome";
 import * as far from "@fortawesome/free-regular-svg-icons";
