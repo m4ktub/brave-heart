@@ -1,6 +1,10 @@
-body {
-  padding: 0;
-  margin: 0;
+html, body {
+  padding: 0px;
+  margin: 0px;
+  background-color: #f7f7f7;
+}
+
+.popup {
   height: 300px;
   width: 400px;
 }
@@ -12,10 +16,6 @@ body {
   margin: 0px;
   outline: none;
   overflow: auto;
-}
-
-.popup {
-  background-color: #f7f7f7;
 }
 
 .header {
@@ -138,5 +138,69 @@ body {
 
 .usage .actions .button:hover {
   cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.options {
+  width: 66%;
+  margin-left: 17%;
+  margin-top: 40px;
+}
+
+.options .header {
+  width: auto;
+}
+
+.options h1 {
+  padding: 14px;
+  margin: 0px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.options .group {
+  padding: 14px;
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.options .group:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.options .description {
+  margin-top: -0.83em;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.options .exclusions ul {  
+  margin: 0px;
+  padding-inline-start: 0px;
+  list-style: none;
+}
+
+.options .exclusions ul li {  
+  padding: 4px 4px 4px 0px;
+}
+
+.options .exclusions ul li img {  
+  padding-right: 4px;
+}
+
+.options .exclusions ul li .actions a {  
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 2px 10px;
+}
+
+.options .exclusions ul li:not(:hover) .actions {  
+  display: none;
+}
+
+.options .exclusions ul li:hover {  
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.options .exclusions ul li .actions a:hover {  
   background-color: rgba(10, 193, 141, 0.5);
 }
