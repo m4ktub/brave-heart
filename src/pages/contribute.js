@@ -3,7 +3,10 @@ import "../css/style.css";
 
 import * as fa from "@fortawesome/vue-fontawesome";
 import * as far from "@fortawesome/free-regular-svg-icons";
+import * as fas from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+library.add(fas.faBan);
+library.add(fas.faCoins);
 library.add(far.faClock);
 
 import Contribute from "../components/Contribute.vue";

@@ -13,6 +13,7 @@
           <span class="title">{{ producer.title }}</span>
           <span class="details">
             <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}
+            <slot name="details" v-bind:producer="producer"></slot>
           </span>
         </div>
         <div class="bottom">

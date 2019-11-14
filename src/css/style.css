@@ -220,6 +220,7 @@ html, body {
 }
 
 .contribute .body {
+  padding-top: 4px;
   border-left: 1px solid rgba(0, 0, 0, 0.3);
   border-right: 1px solid rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
@@ -229,4 +230,71 @@ html, body {
   padding: 14px;
   margin: 0px;
   border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.contribute .payment {
+  padding: 10px 0px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.contribute .usage {
+  padding: 0px 6px 6px 6px;
+}
+
+.contribute .payment fieldset {
+  flex: 1 0 auto;
+  border: none;
+  margin: 0px;
+  padding: 0px 10px 10px 10px;
+}
+
+.contribute .payment .actions {
+  flex: 0 0 auto;
+  padding: 0px 10px 10px 0px;
+}
+
+.contribute .payment legend {
+  font-weight: bold;
+}
+
+.contribute .payment button {
+  width: 60px;
+  height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.contribute .payment button:hover {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.contribute .payment button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.contribute .payment button:hover {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.contribute .payment .active {
+  border: 1px solid rgba(10, 193, 141, 0.5);
+  box-shadow: 0px 0px 4px 1px rgba(10, 193, 141, 0.5);
+}
+
+.contribute .payment input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  height: 30px;
+  padding: 0px 10px;
+  width: 60px;
+}
+
+.contribute .payment .actions button {
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.contribute .payment .actions button:hover {
+  color: white;
+  background-color: rgb(5, 109, 80);
 }
