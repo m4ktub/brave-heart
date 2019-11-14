@@ -1,10 +1,10 @@
 import { 
     MessageType,
     Message,
-    ContributableFoundMessage,
-    ContributableRescanMessage
+    PayableFoundMessage,
+    PayableRescanMessage
 } from "./lib/Messages";
-import { Contributable } from "./lib/Contributable";
+import { Payable } from "./lib/Payable";
 import { PersistentState } from "./lib/State";
  
 /**
@@ -13,26 +13,26 @@ import { PersistentState } from "./lib/State";
 var state = new PersistentState();
 
 /**
- * Internal tracking of the contributable found in each tab.
+ * Internal tracking of the payable found in each tab.
  */
-var tabs: { [key: string]: Contributable } = {
+var tabs: { [key: string]: Payable } = {
 };
 
 /**
  * Traverse tabs (active and audible ones) and count their usage if
- * there's a contributable content associated with them.
+ * there's a payable content associated with them.
  *
  * This function assumes it's called every second.
  */
 function monitor() {
     function accumulateTab(tab: chrome.tabs.Tab) {
-        let contributable = tabs[tab.id];
+        let payable = tabs[tab.id];
         
-        if (!contributable) {
+        if (!payable) {
             return;
         }
         
-        state.currentPeriod.trackUsage(contributable, 1);
+        state.currentPeriod.trackUsage(payable, 1);
         state.save();
     }
     
@@ -58,10 +58,10 @@ function monitor() {
 }
 
 /**
- * Associates the contributable content to the tab.
+ * Associates the payable content to the tab.
  */
-function onContributableFound(tab: chrome.tabs.Tab, contributable: Contributable) {
-    tabs[tab.id] = contributable;
+function onPayableFound(tab: chrome.tabs.Tab, payable: Payable) {
+    tabs[tab.id] = payable;
 }
 
 /**
@@ -72,9 +72,9 @@ function onContributableFound(tab: chrome.tabs.Tab, contributable: Contributable
 function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
     let msg = message as Message;
     switch (msg.type) {
-        case MessageType.ContributableFound:
-            let contributableMsg = msg as ContributableFoundMessage;
-            onContributableFound(sender.tab, contributableMsg.contributable);
+        case MessageType.PayableFound:
+            let payableMsg = msg as PayableFoundMessage;
+            onPayableFound(sender.tab, payableMsg.payable);
             sendResponse(true);
             break;
         default:
@@ -92,8 +92,8 @@ function onTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab:
         // remove current usage associated with tab
         delete tabs[tabId];
         
-        // request scan of new contributable
-        chrome.tabs.sendMessage(tabId, new ContributableRescanMessage());
+        // request scan of new payable
+        chrome.tabs.sendMessage(tabId, new PayableRescanMessage());
     }
 }
 

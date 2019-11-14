@@ -1,5 +1,5 @@
-import { Contributable } from "./lib/Contributable";
-import { MessageType, Message, ContributableFoundMessage } from "./lib/Messages";
+import { Payable } from "./lib/Payable";
+import { MessageType, Message, PayableFoundMessage } from "./lib/Messages";
 import { WebsiteScannerInstance } from "./lib/Scanners";
 
 // list of scanners to run
@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener(onRuntimeMessage);
 function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
     let msg = message as Message;
     switch (msg.type) {
-        case MessageType.ContributableRescan:
+        case MessageType.PayableRescan:
             scan();
             sendResponse(true);
             break;
@@ -23,21 +23,21 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
     }
 }
 
-// scan page for contributable content
+// scan page for payable content
 function scan() {
     const acceptingScanners = availableScanners.filter(m => m.accepts(document))
     
-    var contributable: Contributable = null;
+    var payable: Payable = null;
     for (let scanner of acceptingScanners) {
-        contributable = scanner.scan(document);
-        if (contributable) {
+        payable = scanner.scan(document);
+        if (payable) {
             break;
         }
     }
     
-    if (contributable != null) {
-        console.log("[Brave Heart] found contributable content: ", contributable);
-        chrome.runtime.sendMessage(ContributableFoundMessage.carrying(contributable));
+    if (payable != null) {
+        console.log("[Brave Heart] found payable content: ", payable);
+        chrome.runtime.sendMessage(PayableFoundMessage.carrying(payable));
     }
 }
 

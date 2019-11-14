@@ -1,11 +1,11 @@
-import { Content, Account, Contributable } from "./Contributable";
+import { Content, Account, Payable } from "./Payable";
 
 const CashAddrRegExp = new RegExp("(bitcoincash:)?[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{42,}|(BITCOINCASH:)?[QPZRY9X8GF2TVDW0S3JN54KHCE6MUA7L]{42,}", "g");
 
 export interface Scanner {
 
     accepts(document: HTMLDocument): boolean;
-    scan(document: HTMLDocument): Contributable | null;
+    scan(document: HTMLDocument): Payable | null;
 
 }
 
@@ -15,7 +15,7 @@ export class WebsiteScanner implements Scanner {
         return true;
     }
 
-    scan(document: HTMLDocument): Contributable | null {
+    scan(document: HTMLDocument): Payable | null {
         let address = this.scanAddress(document);
         if (!address) {
             return null;
@@ -25,7 +25,7 @@ export class WebsiteScanner implements Scanner {
         let account = this.scanAccount(document);
         let content = this.scanContent(document);
         
-        return new Contributable(site, account, content, address);
+        return new Payable(site, account, content, address);
     }
 
     protected scanSite(document: HTMLDocument): string {

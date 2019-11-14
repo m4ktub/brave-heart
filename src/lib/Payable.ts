@@ -1,14 +1,14 @@
 export class Account {
-    constructor(readonly id: string, public name: string, readonly url: string) {
+    constructor(readonly id: string, public name: string, public url: string) {
     }
 }
 
 export class Content {
-    constructor(readonly id: string, public title: string, readonly url: string) {
+    constructor(readonly id: string, public title: string, public url: string) {
     }
 }
 
-export class Contributable {
+export class Payable {
     readonly id: string;
     
     constructor(readonly site: string, readonly account: Account, readonly content: Content, readonly address: string) {

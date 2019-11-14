@@ -1,16 +1,16 @@
-import { Contributable, Account, Content } from "./Contributable";
+import { Payable, Account, Content } from "./Payable";
 
-export class UsedContributable {
+export class UsedPayable {
     paid: number;
     seconds: number;
-    constructor(readonly contributable: Contributable) {
+    constructor(readonly payable: Payable) {
         this.paid = 0;
         this.seconds = 0;
     }
 }
 
 export interface UsageMap {
-    [key: string]: UsedContributable;
+    [key: string]: UsedPayable;
 }
 
 export class Period {
@@ -30,24 +30,24 @@ export class Period {
         this.end = new Date().toISOString();
     }
 
-    trackUsage(contributable: Contributable, seconds: number = 0) {
-        let usage = this.usage[contributable.id];
+    trackUsage(payable: Payable, seconds: number = 0) {
+        let usage = this.usage[payable.id];
         if (! usage) {
-            usage = this.usage[contributable.id] = new UsedContributable(contributable);
+            usage = this.usage[payable.id] = new UsedPayable(payable);
         }
         
         // add usage
         usage.seconds += seconds;
         
-        // update contributable mutable details
-        usage.contributable.content.title = contributable.content.title;
-        if (usage.contributable.account && contributable.account) {
-            usage.contributable.account.name = contributable.account.name;
+        // update payable mutable details
+        usage.payable.content.title = payable.content.title;
+        if (usage.payable.account && payable.account) {
+            usage.payable.account.name = payable.account.name;
         }
     }
     
-    remove(contributable: Contributable) {
-        delete this.usage[contributable.id];
+    remove(payable: Payable) {
+        delete this.usage[payable.id];
     }
 }
 
@@ -97,11 +97,11 @@ export class PersistentState {
         Object.assign(this, json);
         Object.setPrototypeOf(this.currentPeriod, Period.prototype);
         Object.keys(this.currentPeriod.usage).map(k => this.currentPeriod.usage[k]).forEach(tc => {
-            Object.setPrototypeOf(tc, UsedContributable.prototype);
-            Object.setPrototypeOf(tc.contributable, Contributable.prototype);
-            Object.setPrototypeOf(tc.contributable.content, Content.prototype);
-            if (tc.contributable.account) {
-                Object.setPrototypeOf(tc.contributable.account, Account.prototype);
+            Object.setPrototypeOf(tc, UsedPayable.prototype);
+            Object.setPrototypeOf(tc.payable, Payable.prototype);
+            Object.setPrototypeOf(tc.payable.content, Content.prototype);
+            if (tc.payable.account) {
+                Object.setPrototypeOf(tc.payable.account, Account.prototype);
             }
         });
 

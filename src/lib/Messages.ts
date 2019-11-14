@@ -1,25 +1,25 @@
-import { Contributable } from "./Contributable";
+import { Payable } from "./Payable";
 
 export enum MessageType {
-    ContributableFound = "BH_CONTRIBUTABLE_FOUND",
-    ContributableRescan = "BH_CONTRIBUTABLE_FOUND"
+    PayableFound = "BH_PAYABLE_FOUND",
+    PayableRescan = "BH_PAYABLE_FOUND"
 }
 
 export interface Message {
     readonly type: MessageType;
 }
 
-export class ContributableFoundMessage implements Message {
-    readonly type = MessageType.ContributableFound;
+export class PayableFoundMessage implements Message {
+    readonly type = MessageType.PayableFound;
     
-    constructor(readonly contributable: Contributable) {
+    constructor(readonly payable: Payable) {
     }
     
-    static carrying(contributable: Contributable): ContributableFoundMessage {
-        return new ContributableFoundMessage(contributable);
+    static carrying(payable: Payable): PayableFoundMessage {
+        return new PayableFoundMessage(payable);
     }
 }
 
-export class ContributableRescanMessage implements Message {
-    readonly type = MessageType.ContributableRescan;
+export class PayableRescanMessage implements Message {
+    readonly type = MessageType.PayableRescan;
 }
