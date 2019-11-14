@@ -1,9 +1,16 @@
 <template>
   <div class="contribute">
-    <h1>Contribute</h1>
-    <usage v-bind:period="paymentPeriod">
-    </usage>
-    <button v-on:click="pay" :disabled="paymentPeriod.paid">Pay</button>
+    <h1 class="header">Contribute</h1>
+    <div class="body">
+      <div class="payment">
+        Payment options
+      </div>
+      <usage v-bind:period="paymentPeriod">
+      </usage>
+      <div class="buttons">
+        <button v-on:click="pay" :disabled="paymentPeriod.paid">Pay</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,8 +20,7 @@ import { PersistentState, Settings } from "../lib/State";
 export default {
   data() {
     return {
-      state: new PersistentState(),
-      period: null
+      state: new PersistentState()
     }
   },
   methods: {

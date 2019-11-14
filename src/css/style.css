@@ -4,20 +4,6 @@ html, body {
   background-color: #f7f7f7;
 }
 
-.popup {
-  height: 300px;
-  width: 400px;
-}
-
-.popup div {
-  display: inline-block;
-  vertical-align: top;
-  zoom: 1;
-  margin: 0px;
-  outline: none;
-  overflow: auto;
-}
-
 .header {
   width: 100%;
   height: 30px;
@@ -46,18 +32,6 @@ html, body {
   line-height: 30px;
 }
 
-.usage {
-  width: 100%;
-  height: 240px;
-}
-
-.contribute {
-  width: 100%;
-  height: 30px;
-  text-align: center;
-  line-height: 30px;
-}
-
 .button {
   display: inline-block;
 }
@@ -72,26 +46,29 @@ html, body {
 }
 
 .usage .line {
-  display: flex;
   width: 100%;
-  height: 44px;
+  height: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
   margin: 4px 0px;
+}
+
+.usage .line .left {
+  flex: 0 0 44px;
+}
+
+.usage .line .right {
+  width: 1%;
+  flex-grow: 1;
 }
 
 .usage .line .left .icon {
   margin: 4px;
 }
-
-.usage .line .left {
-  flex: 46px;
-}
-
-.usage .line .right {
-  flex: 100%;
-}
-
 .usage .line .right .top {
   display: flex;
+  width: 100%;
   height: 22px;
 }
 
@@ -108,9 +85,10 @@ html, body {
   white-space: nowrap;
 }
 
-.usage .time {
+.usage .details {
   flex: none;
   margin-right: 4px;
+  white-space: nowrap;
 }
 
 .usage .url {
@@ -139,6 +117,32 @@ html, body {
 .usage .actions .button:hover {
   cursor: pointer;
   background-color: rgba(10, 193, 141, 0.5);
+}
+
+.popup {
+  height: 300px;
+  width: 400px;
+}
+
+.popup div {
+  display: inline-block;
+  vertical-align: top;
+  zoom: 1;
+  margin: 0px;
+  outline: none;
+  overflow: auto;
+}
+
+.popup .usage {
+  width: 100%;
+  height: 240px;
+}
+
+.popup .contribute {
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
 }
 
 .options {
@@ -203,4 +207,26 @@ html, body {
 
 .options .exclusions ul li .actions a:hover {  
   background-color: rgba(10, 193, 141, 0.5);
+}
+
+.contribute {
+  width: 66%;
+  margin-left: 17%;
+  margin-top: 40px;
+}
+
+.contribute .header {
+  width: auto;
+}
+
+.contribute .body {
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.contribute h1 {
+  padding: 14px;
+  margin: 0px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }

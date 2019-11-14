@@ -11,7 +11,9 @@
       <div class="right">
         <div class="top">
           <span class="title">{{ producer.title }}</span>
-          <span class="time"><fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}</span>
+          <span class="details">
+            <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}
+          </span>
         </div>
         <div class="bottom">
           <span class="url"><a v-bind:href="producer.url" target="_blank">{{ producer.url }}</a></span>
