@@ -3,6 +3,7 @@
 // Having this file allows running "webpack" without arguments.
 //
 
+const package = require('./package.json');
 const path = require('path');
 const ExtensionReloader  = require('webpack-extension-reloader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -59,9 +60,18 @@ module.exports = {
       manifest: path.resolve(__dirname, "src/manifest.json")
     }),
     new CopyWebpackPlugin([
-      { from: 'manifest.json' },
+      { from: 'manifest.json', transform: updateVersion },
       { from: 'pages/**/*.html' },
       { from: 'images/**/*.*' }
     ])
   ]
 };
+
+function updateVersion(input) {
+  const text = input.toString();
+  const data = JSON.parse(text);
+
+  data.version = package.version;
+
+  return JSON.stringify(data, null, 2);
+}
