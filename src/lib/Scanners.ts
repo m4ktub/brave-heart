@@ -1,4 +1,5 @@
 import { Content, Account, Payable } from "./Payable";
+import * as bchaddr from "bchaddrjs";
 
 const CashAddrRegExp = new RegExp("(bitcoincash:)?[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{42,}|(BITCOINCASH:)?[QPZRY9X8GF2TVDW0S3JN54KHCE6MUA7L]{42,}", "g");
 
@@ -63,8 +64,7 @@ export class WebsiteScanner implements Scanner {
     }
     
     private _isValidAddress(address: string) {
-        // TODO: validate address
-        return true;
+        return bchaddr.isCashAddress(address);
     }
 }
 
