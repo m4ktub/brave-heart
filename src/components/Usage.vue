@@ -1,8 +1,6 @@
 <template>
   <div class="usage">
-    <div v-for="(producer, index) in visibleUsage.producers" v-bind:key="producer.url"
-         v-on:mouseover="mouseIndex = index" v-on:mouseleave="mouseIndex = -1"
-         v-bind:class="{ line: true, active: mouseIndex == index }">
+    <div class="line" v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
       <div class="left">
         <div class="icon">
           <img :src="'chrome://favicon/size/32/' + producer.url" />
@@ -38,8 +36,7 @@ export default {
   props: [ "period" ],
   data() {
     return {
-      state: new PersistentState(),
-      mouseIndex: -1
+      state: new PersistentState()
     };
   },
   computed: {

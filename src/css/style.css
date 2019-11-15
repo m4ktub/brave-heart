@@ -105,7 +105,11 @@ html, body {
   display: none;
 }
 
-.usage .line.active .actions {
+.usage .line:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.usage .line:hover .actions {
   display: block;
 }
 
@@ -202,7 +206,7 @@ html, body {
 }
 
 .options .exclusions ul li:hover {  
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .options .exclusions ul li .actions a:hover {  
