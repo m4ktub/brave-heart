@@ -1,9 +1,9 @@
 import { Payable } from "./lib/Payable";
 import { MessageType, Message, PayableFoundMessage } from "./lib/Messages";
-import { WebsiteScannerInstance } from "./lib/Scanners";
+import { YoutubeScannerInstance, WebsiteScannerInstance, Scanner } from "./lib/Scanners";
 
 // list of scanners to run
-const availableScanners = [ WebsiteScannerInstance ];
+const availableScanners = [ YoutubeScannerInstance, WebsiteScannerInstance ];
 
 // register message dispatcher
 chrome.runtime.onMessage.addListener(onRuntimeMessage);
@@ -25,16 +25,12 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
 
 // scan page for payable content
 function scan() {
-    const acceptingScanners = availableScanners.filter(m => m.accepts(document))
-    
-    var payable: Payable = null;
-    for (let scanner of acceptingScanners) {
-        payable = scanner.scan(document);
-        if (payable) {
-            break;
-        }
+    const scanner = availableScanners.find(m => m.accepts(document));
+    if (!scanner) {
+        return;
     }
-    
+
+    const payable = scanner.scan(document);
     if (payable != null) {
         console.log("[Brave Heart] found payable content: ", payable);
         chrome.runtime.sendMessage(PayableFoundMessage.carrying(payable));
