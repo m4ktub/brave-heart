@@ -30,7 +30,10 @@
       </template>
     </usage>
     <div class="contribute">
-        <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">Contribute</button>
+        <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">
+          <fa-icon icon="hand-holding-usd"/>
+          Contribute
+        </button>
     </div>
   </div>
 </template>

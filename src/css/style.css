@@ -149,6 +149,16 @@ html, body {
   line-height: 30px;
 }
 
+.popup .contribute button {
+  padding: 2px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.popup .contribute button:hover {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
 .options {
   width: 66%;
   margin-left: 17%;

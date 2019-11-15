@@ -9,6 +9,7 @@ library.add(fas.faChevronLeft);
 library.add(fas.faChevronRight); 
 library.add(fas.faSlidersH);
 library.add(fas.faBan);
+library.add(fas.faHandHoldingUsd);
 library.add(far.faClock);
 
 import Popup from "../components/Popup.vue";
