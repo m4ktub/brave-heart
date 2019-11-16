@@ -1,10 +1,6 @@
 import { UsedPayable, UsageMap, Settings } from "./State";
 import { Account } from "./Payable";
 
-function valuesOf<T>(obj: { [key: string]: T }): T[] {
-    return Object.keys(obj).map(k => obj[k]);
-}
-
 interface Used {
     seconds: number;
     paid: number;
@@ -41,7 +37,7 @@ export class UiUsage {
         let excluded = new Set(settings.excludedUrls);
 
         // filter conributables matching excluded urls
-        let filtered = valuesOf(usage).filter(used => {
+        let filtered = Object.values(usage).filter(used => {
             let p = used.payable;
             
             if (excluded.has(p.site)) {
@@ -67,7 +63,7 @@ export class UiUsage {
     }
 
     private group(usage: UsageMap) {
-        let groupedUsage = valuesOf(usage).reduce((map, used) => {
+        let groupedUsage = Object.values(usage).reduce((map, used) => {
             let c = used.payable;
             let key = c.site + (c.account ? "~" + c.account.name : "");
             if (map.has(key)) {
