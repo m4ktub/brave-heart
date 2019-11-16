@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
-import { UiUsage } from "./Ui";
+import { UiUsage } from "../lib/Ui";
 import { TimeFormatter } from '../lib/Time';
 
 const formatter = new TimeFormatter();

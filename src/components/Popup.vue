@@ -41,7 +41,7 @@
 <script lang="ts">
 import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
 import { Account } from "../lib/Payable";
-import { UiUsage, UiProducer } from "./Ui";
+import { UiUsage, UiProducer } from "../lib/Ui";
 import { TimeFormatter } from '../lib/Time';
 
 const formatter = new TimeFormatter();

@@ -1,5 +1,5 @@
-import { UsedPayable, UsageMap, Settings } from "../lib/State";
-import { Account } from "../lib/Payable";
+import { UsedPayable, UsageMap, Settings } from "./State";
+import { Account } from "./Payable";
 
 function valuesOf<T>(obj: { [key: string]: T }): T[] {
     return Object.keys(obj).map(k => obj[k]);

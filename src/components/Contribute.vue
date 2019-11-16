@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { PersistentState, Period, Settings } from "../lib/State";
-import { UiUsage, UiProducer } from "./Ui";
+import { UiUsage, UiProducer } from "../lib/Ui";
 
 export default {
   data() {
