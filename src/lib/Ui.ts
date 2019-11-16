@@ -7,10 +7,19 @@ function valuesOf<T>(obj: { [key: string]: T }): T[] {
 
 interface Used {
     seconds: number;
+    paid: number;
 }
 
-function sumSeconds<T extends Used>(objects: T[]): number {
-    return objects.reduce((total, used) => total + used.seconds, 0);
+function sum<T>(objects: T[], f: (o: T) => number): number {
+    return objects.reduce((total, o) => total + f(o), 0);
+}
+
+function sumSeconds(objects: Used[]) {
+    return sum(objects, o => o.seconds);
+}
+
+function sumPaid(objects: Used[]) {
+    return sum(objects, o => o.paid);
 }
 
 function sortBySecondsDesc<T extends Used>(objects: T[]): T[] {
@@ -82,11 +91,13 @@ export class UiProducer {
     readonly title: string;
     readonly seconds: number;
     readonly url: string;
+    readonly paid: number;
     readonly contents: UsedPayable[];
 
     constructor(readonly site: string, readonly account: Account, contents: UsedPayable[]) {
         this.contents = sortBySecondsDesc(contents);
         this.seconds = sumSeconds(contents);
+        this.paid = sumPaid(contents);
 
         if (this.contents.length == 1) {
             let c = this.contents[0].payable;

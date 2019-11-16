@@ -23,6 +23,11 @@
       </div>
     </div>
     <usage v-bind:period="visiblePeriod">
+      <template v-slot:details="{ producer }">
+        <span v-if="index > 0">
+          | ${{ producer.paid.toFixed(2) }}
+        </span>
+      </template>
       <template v-slot:actions="{ producer }">
           <a v-on:click="excludeProducer(producer)" class="button action">
             <fa-icon icon="ban"/>
