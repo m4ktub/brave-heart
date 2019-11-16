@@ -24,7 +24,7 @@
     </div>
     <usage v-bind:period="visiblePeriod">
       <template v-slot:details="{ producer }">
-        <span v-if="index > 0">
+        <span v-if="isPeriodPaid">
           | ${{ producer.paid.toFixed(2) }}
         </span>
       </template>
