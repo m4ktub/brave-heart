@@ -25,7 +25,7 @@
     <usage v-bind:period="visiblePeriod">
       <template v-slot:details="{ producer }">
         <span v-if="isPeriodPaid">
-          | ${{ producer.paid.toFixed(2) }}
+          | {{ producer.paid | asCurrency }}
         </span>
       </template>
       <template v-slot:actions="{ producer }">
@@ -48,8 +48,10 @@ import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
 import { Account } from "../lib/Payable";
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { TimeFormatter } from '../lib/Time';
+import { Currency } from '../lib/Currency';
 
 const formatter = new TimeFormatter();
+const currency = new Currency({ currency: "USD" });
 
 export default {
   data() {
@@ -112,6 +114,9 @@ export default {
     },
     asDateRange([start, end]) {
       return formatter.range(start, end);
+    },
+    asCurrency(value) {
+      return currency.format(value);
     }
   }
 }
