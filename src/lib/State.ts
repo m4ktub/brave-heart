@@ -1,4 +1,5 @@
 import { Payable, Account, Content } from "./Payable";
+import { Currency } from './Currency';
 
 export class UsedPayable {
     paid: number;
@@ -28,6 +29,26 @@ export class Period {
 
     close() {
         this.end = new Date().toISOString();
+    }
+
+    /**
+     * Marks the period as paid and updates all usage with the paid amount.
+     * 
+     * The `totalAmount` passed will be distributed proportionally to the number of seconds
+     * of each `UsedPayable` in `usage`. The default value of 0 marks the period as paid and
+     * ensures all `UsedPayable` will have 0 as paid amount.
+     * 
+     * @param totalAmount the total fiat amount to distribute
+     */
+    pay(totalAmount: number = 0) {
+        const usage = Object.values(this.usage);
+        const totalSeconds = usage.reduce((total, used) => total + used.seconds, 0);
+        
+        // update usage with paid amount
+        usage.forEach(used => used.paid = Currency.proportion(totalAmount, used.seconds, totalSeconds));
+        
+        // mark period as paid
+        this.paid = true;
     }
 
     trackUsage(payable: Payable, seconds: number = 0) {
