@@ -55,11 +55,13 @@ export default {
       // save period to lock ui (see `.paymentPeriod´)
       this.period = state.currentPeriod;
 
-      // updated paid values
+      // update paid values of what is visible
       let usage = this.paymentUsage as UiUsage;
       let total = usage.seconds;
       usage.producers.forEach(p => {
         p.contents.forEach(used => {
+          // this works because `used` objects are shared
+          // with the persistent state 
           used.paid = Currency.proportion(this.payment, used.seconds, total);
         });
       });
