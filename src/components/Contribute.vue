@@ -52,18 +52,27 @@ export default {
     pay() {
       let state: PersistentState = this.state;
 
-      // make period as paid and updated paid values
-      state.currentPeriod.pay(this.payment);
-
       // save period to lock ui (see `.paymentPeriod´)
       this.period = state.currentPeriod;
+
+      // updated paid values
+      let usage = this.paymentUsage as UiUsage;
+      let total = usage.seconds;
+      usage.producers.forEach(p => {
+        p.contents.forEach(used => {
+          used.paid = Currency.proportion(this.payment, used.seconds, total);
+        });
+      });
+
+      // mark period as paid
+      state.currentPeriod.paid = true;
 
       // start a new period without usage and save state
       state.startNewPeriod();
       state.save();
     },
     producerValue(producer: UiProducer): number {
-      let usage: UiUsage = this.paymentUsage;
+      let usage = this.paymentUsage as UiUsage;
       let total = usage.seconds;
       return Currency.proportion(this.payment, producer.seconds, total);
     },
