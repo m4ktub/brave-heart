@@ -5,12 +5,15 @@ export interface CurrencyFormatOptions {
 export class Currency {
 
   /**
-   * Ensures the given `value` is a number with 2 fixed precision of two decimals places.
+   * Ensures the given `value` is a number with a fixed precision. By default
+   * two decimals places are used but other decimals places can be provided to
+   * get BCH values, for example.
    * 
    * @param value the float value
+   * @param decimals the number of decimals in the currency value
    */
-  static currency(value: number): number {
-    return +value.toFixed(2);
+  static currency(value: number, decimals: number = 2): number {
+    return +value.toFixed(decimals);
   }
 
   /**
@@ -35,10 +38,20 @@ export class Currency {
    * @param options options affecting the format, like the currency
    */
   static format(value: number, options: CurrencyFormatOptions): string {
-    return value.toLocaleString(undefined, { 
-      style: "currency", 
-      currency: options.currency
-    }); 
+    const currency = options.currency;
+    const bchOptions = {
+      currencyDisplay: "code",
+      minimumFractionDigits: 8, 
+      maximumFractionDigits: 8 
+    };
+
+    const finalOptions = Object.assign(
+      { style: "currency", currency },
+      currency == "BCH" ? bchOptions : {}
+    );
+
+    console.log(finalOptions);
+    return value.toLocaleString(undefined, finalOptions);
   }
 
 }

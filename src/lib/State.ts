@@ -55,6 +55,7 @@ export class Period {
 export interface Settings {
     currency: string;
     minAmount: number;
+    rate: number;
     excludedUrls: string[];
 }
 
@@ -73,6 +74,7 @@ export class PersistentState {
         this.settings = {
             currency: 'USD',
             minAmount: 0.1,
+            rate: 1.0,
             excludedUrls: []
         };
         
@@ -106,6 +108,7 @@ export class PersistentState {
             }
         });
 
+        this.settings.rate = this.settings.rate || 1.0;
         this.settings.excludedUrls = this.settings.excludedUrls || [];
     }
     
