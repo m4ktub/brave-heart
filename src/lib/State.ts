@@ -1,5 +1,4 @@
 import { Payable, Account, Content } from "./Payable";
-import { Currency } from './Currency';
 
 export class UsedPayable {
     paid: number;

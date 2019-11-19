@@ -47,8 +47,8 @@
 import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
 import { Account } from "../lib/Payable";
 import { UiUsage, UiProducer } from "../lib/Ui";
-import { TimeFormatter } from '../lib/Time';
-import { Currency } from '../lib/Currency';
+import { TimeFormatter } from "../lib/Time";
+import { Currency } from "../lib/Currency";
 
 const formatter = new TimeFormatter();
 

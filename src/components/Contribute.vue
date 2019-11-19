@@ -75,7 +75,7 @@
 <script lang="ts">
 import { PersistentState, Period, Settings, UsedPayable } from '../lib/State';
 import { UiUsage, UiProducer } from "../lib/Ui";
-import { Currency } from '../lib/Currency';
+import { Currency } from "../lib/Currency";
 import * as QRCode from "qrcode";
 
 interface TxOut {

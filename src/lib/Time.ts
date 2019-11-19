@@ -1,11 +1,11 @@
-import * as moment from 'moment';
+import * as moment from "moment";
 
 type Formatable = Date | string | number;
 
 export class TimeFormatter {
     readonly locale: string;
 
-    constructor(locale = 'en-US') {
+    constructor(locale = "en-US") {
         this.locale = locale;
     }
 
