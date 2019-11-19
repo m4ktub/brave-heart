@@ -50,7 +50,7 @@
         </div>
         <div class="qrcontainer">
           <div class="qrcode">
-            <img v-bind:src="paymentDataURL">
+            <img v-on:click="copyPaymentURL" v-bind:src="paymentDataURL">
           </div>
           <div class="qrmessage" v-if="paymentTxId">
             Received!
