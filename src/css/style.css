@@ -302,3 +302,114 @@ html, body {
   color: white;
   background-color: rgb(5, 109, 80);
 }
+
+.contribute .paymodal {
+  position:fixed;
+  padding:0;
+  margin:0;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.contribute .paybox {
+  width: 400px;
+  background-color: #f7f7f7;
+  padding: 10px;
+  align-self: center;
+  margin-top: 50px;
+}
+
+.contribute .paytitle {
+  margin-left: -10px;
+  margin-top: -10px;
+  margin-right: -10px;
+  padding: 10px;
+  background-color: rgba(10, 193, 141, 0.5);
+  font-weight: bold;
+  text-align: center;
+}
+
+.contribute .paytext {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.contribute .qrcontainer {
+  text-align: center;
+  position: relative;
+}
+
+.contribute .qrcontainer .qrcode img {
+  animation-name: qrcodeborder;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  cursor: pointer;
+}
+
+@keyframes qrcodeborder {
+  0% { box-shadow: 0px 0px 0px rgb(10, 193, 141); }
+  50% { box-shadow: 0px 0px 5px rgb(10, 193, 141); }
+}
+
+.contribute .qrmessage {
+  position: absolute;
+  top: 125px;
+  left: 100px;
+  padding: 20px 0px;
+  width: 200px;
+  background-color: rgb(10, 193, 141);
+  color: white;
+  font-weight: bold;
+}
+
+.contribute .qrcopy {
+  position: absolute;
+  top: 6px;
+  right: 78px;
+}
+
+.contribute .qrcopy input[name="qrcopyinput"] {
+  width: 0px;
+  color: white;
+  border: white;
+  cursor: default;
+}
+
+.contribute .qrcopy button {
+  border: none;
+  background-color: transparent;
+}
+
+.contribute .qrcopy button:hover {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.contribute .payinfo {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.contribute .paybuttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.contribute .paybuttons button {
+  flex: 0 0 auto;
+  height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.contribute .paybuttons button:hover {
+  flex: 0 0 auto;
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+

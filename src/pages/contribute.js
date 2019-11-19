@@ -7,6 +7,7 @@ import * as fas from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 library.add(fas.faBan);
 library.add(fas.faCoins);
+library.add(fas.faCopy);
 library.add(far.faClock);
 
 import Contribute from "../components/Contribute.vue";

@@ -41,8 +41,8 @@
         <div class="paytitle">
           Payment
         </div>
-        <div clas="paytext">
-          Scan the QR Code with a wallet supporting payment codes (BIP70) and complete payment.
+        <div class="paytext">
+          Scan the QR Code with a wallet supporting payment codes (BIP70).
           You can also use one of the buttons below to use a local application.
         </div>
         <div class="qrcontainer">
@@ -52,9 +52,18 @@
           <div class="qrmessage" v-if="paymentTxId">
             Received!
           </div>
+          <div class="qrcopy">
+            <input name="qrcopyinput" ref="qrcopyinput" v-bind:value="paymentURL" />
+            <span v-show="paymentURLCopied">
+              Copied
+            </span>
+            <button v-on:click="copyPaymentURL">
+              <fa-icon icon="copy"/> Click to copy
+            </button>
+          </div>
         </div>
         <div class="payinfo">
-          {{ asCurrency(payment) }} = {{ asCurrency(paymentBCH, "BCH") }}
+          {{ asCurrency(payment) }} / {{ asCurrency(paymentBCH, "BCH") }}
         </div>
         <div class="paybuttons">
           <button>
@@ -62,9 +71,6 @@
           </button>
           <button>
             Pay with Badger Wallet
-          </button>
-          <button>
-            Copy Payment Address
           </button>
         </div>
       </div>
@@ -90,7 +96,7 @@ function requestPaymentURL(outputs: TxOut[], callback: (Error, string) => void) 
 function waitForPaymentToURL(url: string, callback: (boolean, string) => void) {
   setTimeout(() => {
     callback(true, "008594d81e503033791d569e28ad16d62947d26a2c0f3ce06aaf79cf4eadd74c");
-  }, 60 * 1000);
+  }, 10 * 1000);
 }
 
 function flatten<T>(aa: T[][]): T[] {
@@ -103,14 +109,16 @@ export default {
       state: new PersistentState(),
       period: null,
       payment: 5.00,
-      paymentBCH: null,
+      paymentBCH: 0.0,
       paying: false,
+      paymentURL: "",
+      paymentURLCopied: false,
       paymentDataURL: "",
       paymentTxId: null
     }
   },
   methods: {
-    async startPayment() {
+    startPayment() {
       const state: PersistentState = this.state;
 
       // start payment process
@@ -144,20 +152,24 @@ export default {
 
       // request a payment URL for the collected outputs
       requestPaymentURL(outputs, (err, url) => {
+        this.paymentURL = url;
+
         // generate qrcode for URL
-        QRCode.toDataURL(url, (err, dataURL) => {
+        QRCode.toDataURL(url, { width: 300 }, (err, dataURL) => {
           this.paymentDataURL = dataURL;
         });
 
         // wait for payment
         waitForPaymentToURL(url, (err, txid) => {
+          // save transaction id
           this.paymentTxId = txid;
           
-          state.currentPeriod.paid = true;
-          //this.completePayment();
+          // mark payment completed
+          this.completePayment();
 
+          // rmove modal after a few seconds
           setTimeout(() => {
-            this.paying = false;
+             this.paying = false;
           }, 1 * 2000);
         });
       });
@@ -194,6 +206,24 @@ export default {
         state.settings.excludedUrls.push(producer.url);
       }
       state.save();
+    },
+    copyPaymentURL() {
+      // get input element
+      let input = this.$refs.qrcopyinput as HTMLInputElement;
+      
+      // make it visible 
+      input.style.width = "1px";
+
+      // copy
+      input.select();
+      document.execCommand("copy", true, null);
+
+      // hide it again
+      input.style.width = "0px";
+      
+      // briefly show copied message
+      this.paymentURLCopied = true;
+      setTimeout(() => this.paymentURLCopied = false, 5 * 1000);
     }
   },
   computed: {
