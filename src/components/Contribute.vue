@@ -229,8 +229,8 @@ export default {
       return usage.visibleUsage as UiUsage;
     },
     hasUsage() {
-      let state: PersistentState = this.state;
-      return Object.keys(state.currentPeriod.usage).length > 0;
+      let period = this.paymentPeriod as Period;
+      return Object.keys(period.usage).length > 0;
     }
   }
 }
