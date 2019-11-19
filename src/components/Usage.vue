@@ -11,13 +11,13 @@
           <span class="title">{{ producer.title }}</span>
           <span class="details">
             <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}
-            <slot name="details" v-bind:producer="producer"></slot>
+            <slot name="details" v-bind:usage="visibleUsage" v-bind:producer="producer"></slot>
           </span>
         </div>
         <div class="bottom">
           <span class="url"><a v-bind:href="producer.url" target="_blank">{{ producer.url }}</a></span>
           <span class="actions">
-            <slot name="actions" v-bind:producer="producer"></slot>
+            <slot name="actions" v-bind:usage="visibleUsage" v-bind:producer="producer"></slot>
           </span>
         </div>
       </div>

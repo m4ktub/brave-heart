@@ -25,9 +25,9 @@
           </button>
         </div>
       </form>
-      <usage v-if="hasUsage" v-bind:period="paymentPeriod">
-        <template v-slot:details="{ producer }">
-          | {{ asCurrency(producerValue(producer)) }}
+      <usage ref="usage" v-if="hasUsage" v-bind:period="paymentPeriod">
+        <template v-slot:details="{ producer, usage }">
+          | {{ asCurrency(producerValue(usage, producer)) }}
         </template>
         <template v-slot:actions="{ producer }">
           <a v-on:click="excludeProducer(producer)" class="button action">
@@ -185,10 +185,8 @@ export default {
       state.startNewPeriod();
       state.save();
     },
-    producerValue(producer: UiProducer): number {
-      let usage = this.paymentUsage as UiUsage;
-      let total = usage.seconds;
-      return Currency.proportion(this.payment, producer.seconds, total);
+    producerValue(usage: UiUsage, producer: UiProducer): number {
+      return Currency.proportion(this.payment, producer.seconds, usage.seconds);
     },
     asCurrency(value: number, code?: string) {
       let state: PersistentState = this.state;
@@ -227,9 +225,8 @@ export default {
       return this.period || state.currentPeriod;
     },
     paymentUsage() {
-      let state: PersistentState = this.state;
-      let period: Period = this.paymentPeriod;
-      return new UiUsage(period.usage, state.settings);
+      let usage = this.$refs.usage;
+      return usage.visibleUsage as UiUsage;
     },
     hasUsage() {
       let state: PersistentState = this.state;
