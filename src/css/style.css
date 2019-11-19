@@ -303,7 +303,7 @@ html, body {
   background-color: rgba(10, 193, 141, 0.5);
 }
 
-.contribute .payment .actions button:hover {
+.contribute .payment .actions button:not(:disabled):hover {
   color: white;
   background-color: rgb(5, 109, 80);
 }

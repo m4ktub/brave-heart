@@ -20,7 +20,7 @@
                   placeholder="0.00"/>
         </fieldset>
         <div class="actions">
-          <button v-on:click.prevent="startPayment" v-bind:disabled="paying">
+          <button v-on:click.prevent="startPayment" v-bind:disabled="!hasUsage || paying">
             <fa-icon icon="coins"/> Pay
           </button>
         </div>
