@@ -50,7 +50,6 @@ export class Currency {
       currency == "BCH" ? bchOptions : {}
     );
 
-    console.log(finalOptions);
     return value.toLocaleString(undefined, finalOptions);
   }
 
