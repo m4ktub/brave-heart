@@ -65,14 +65,6 @@
         <div class="payinfo">
           {{ asCurrency(payment) }} / {{ asCurrency(paymentBCH, "BCH") }}
         </div>
-        <div class="paybuttons">
-          <button>
-            Pay with Regular Wallet
-          </button>
-          <button>
-            Pay with Badger Wallet
-          </button>
-        </div>
       </div>
     </div> 
   </div>

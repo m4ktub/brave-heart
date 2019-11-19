@@ -395,21 +395,3 @@ html, body {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
-.contribute .paybuttons {
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.contribute .paybuttons button {
-  flex: 0 0 auto;
-  height: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.contribute .paybuttons button:hover {
-  flex: 0 0 auto;
-  cursor: pointer;
-  background-color: rgba(10, 193, 141, 0.5);
-}
-
