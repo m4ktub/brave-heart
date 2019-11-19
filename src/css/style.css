@@ -256,6 +256,11 @@ html, body {
   padding: 0px 6px 6px 6px;
 }
 
+.contribute .body .empty {
+  padding: 0px 10px 10px 10px;
+  font-style: italic;
+}
+
 .contribute .payment fieldset {
   flex: 1 0 auto;
   border: none;

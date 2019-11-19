@@ -25,7 +25,7 @@
           </button>
         </div>
       </form>
-      <usage v-bind:period="paymentPeriod">
+      <usage v-if="hasUsage" v-bind:period="paymentPeriod">
         <template v-slot:details="{ producer }">
           | {{ asCurrency(producerValue(producer)) }}
         </template>
@@ -35,6 +35,9 @@
           </a>
         </template>
       </usage>
+      <div class="empty" v-else>
+        No Bitcoin Cash supporting sites have been visited in the active period.
+      </div>
     </div>
     <div class="paymodal" v-if="paying" v-on:click="stopPayment">
       <div class="paybox" v-on:click.stop>
@@ -227,6 +230,10 @@ export default {
       let state: PersistentState = this.state;
       let period: Period = this.paymentPeriod;
       return new UiUsage(period.usage, state.settings);
+    },
+    hasUsage() {
+      let state: PersistentState = this.state;
+      return Object.keys(state.currentPeriod.usage).length > 0;
     }
   }
 }
