@@ -1,11 +1,19 @@
 {
   "manifest_version": 2,
   "name": "Brave Heart",
+  "short_name": "Brave Heart",
   "description": "Directly reward web producers with Bitcoin Cash and no trusted intermediaries",
+  "homepage_url": "https://github.com/m4ktub/brave-heart",
   "version": "",
   "permissions": [
     "tabs", "activeTab", "storage", "chrome://favicon/"
   ],
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "64": "images/icon64.png",
+    "128": "images/icon128.png"
+  },
   "background": {
     "scripts": [ "background.js" ],
     "persistent": false
@@ -15,7 +23,10 @@
     "default_title": "Brave Heart",
     "default_popup": "pages/popup.html",
     "default_icon": {
-      "16": "images/icon16.png"
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "64": "images/icon64.png",
+      "128": "images/icon128.png"
     }
   },
   "content_scripts": [
