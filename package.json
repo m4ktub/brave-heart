@@ -9,7 +9,7 @@
     "url": "git@github.com:m4ktub/brave-heart.git"
   },
   "scripts": {
-    "build": "npm run webpack",
+    "build": "npm run webpack && node dist/zip.js",
     "webpack": "webpack --mode production",
     "watch": "webpack --watch --mode development"
   },
@@ -32,7 +32,8 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
-    "webpack-extension-reloader": "^1.1.0"
+    "webpack-extension-reloader": "^1.1.0",
+    "zip-folder": "^1.0.0"
   },
   "dependencies": {
     "vue": "^2.6.10",
