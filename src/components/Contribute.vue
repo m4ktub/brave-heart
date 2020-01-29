@@ -45,7 +45,7 @@
           Payment
         </div>
         <div class="paytext">
-          Scan the QR Code with a wallet supporting payment codes (BIP70).
+          To start payment please scan the QR Code with a wallet.
           You can also use one of the buttons below to use a local application.
         </div>
         <div class="qrcontainer">
@@ -77,22 +77,10 @@
 import { PersistentState, Period, Settings, UsedPayable } from '../lib/State';
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { Currency } from "../lib/Currency";
+import { TxOut, PaymentService, MockPaymentService } from '../lib/Payment';
 import * as QRCode from "qrcode";
 
-interface TxOut {
-  address: string,
-  bchAmount: number
-}
-
-function requestPaymentURL(outputs: TxOut[], callback: (Error, string) => void) {
-  callback(null, "bitcoincash:?r=http://pay.m4ktub.ws/r/afA3rGvdd");
-}
-
-function waitForPaymentToURL(url: string, callback: (boolean, string) => void) {
-  setTimeout(() => {
-    callback(true, "008594d81e503033791d569e28ad16d62947d26a2c0f3ce06aaf79cf4eadd74c");
-  }, 10 * 1000);
-}
+const service = new MockPaymentService();
 
 function flatten<T>(aa: T[][]): T[] {
   return aa.reduce((acc, value) => acc.concat(value));
@@ -146,7 +134,7 @@ export default {
       outputs = outputs.filter(o => o.bchAmount > 0.00000546);
 
       // request a payment URL for the collected outputs
-      requestPaymentURL(outputs, (err, url) => {
+      service.requestPaymentUrl(outputs, (err, url) => {
         this.paymentURL = url;
 
         // generate qrcode for URL
@@ -155,7 +143,7 @@ export default {
         });
 
         // wait for payment
-        waitForPaymentToURL(url, (err, txid) => {
+        service.waitForPaymentToUrl(url, (err, txid) => {
           // save transaction id
           this.paymentTxId = txid;
           
