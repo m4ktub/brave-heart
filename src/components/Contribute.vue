@@ -77,10 +77,8 @@
 import { PersistentState, Period, Settings, UsedPayable } from '../lib/State';
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { Currency } from "../lib/Currency";
-import { TxOut, PaymentService, MockPaymentService } from '../lib/Payment';
+import { TxOut, PaymentService, BitboxPaymentService } from '../lib/Payment';
 import * as QRCode from "qrcode";
-
-const service = new MockPaymentService();
 
 function flatten<T>(aa: T[][]): T[] {
   return aa.reduce((acc, value) => acc.concat(value));
@@ -88,8 +86,17 @@ function flatten<T>(aa: T[][]): T[] {
 
 export default {
   data() {
+    // initialize persistent state ensuring that a seed is available
+    const state = new PersistentState(loaded => {
+      if (!loaded.seed) {
+        loaded.seed = BitboxPaymentService.generateSeed();
+        loaded.save();
+      }
+    });
+    
     return {
-      state: new PersistentState(),
+      state,
+      service: null,
       period: null,
       payment: 5.00,
       paymentBCH: 0.0,
@@ -100,6 +107,13 @@ export default {
       paymentTxId: null
     }
   },
+  mounted() {
+    const state: PersistentState = this.state;
+    BitboxPaymentService.getRate(state.settings.currency, (rate) => {
+      state.settings.rate = rate / 100;
+      state.save();
+    });
+  },
   methods: {
     startPayment() {
       const state: PersistentState = this.state;
@@ -109,32 +123,40 @@ export default {
 
       // get rate and calculate total BCH value
       const rate = state.settings.rate;
-      this.paymentBCH = Currency.currency(rate * this.payment, 8);
+      this.paymentBCH = Currency.currency(this.payment / rate, 8);
 
       // collect all used payables
       const usage = this.paymentUsage as UiUsage;
       let used = flatten(usage.producers.map(p => p.contents));
 
       // collect outputs for payment
-      let outputs = [] as TxOut[];
+      let outputMap: { [key: string]: TxOut } = {};
 
       const totalSeconds = usage.seconds;
       used.forEach(u => {
         const address = u.payable.address; 
         const fiatAmount = Currency.proportion(this.payment, u.seconds, totalSeconds);
-        const bchAmount = Currency.currency(rate * fiatAmount, 8);
+        const bchAmount = Currency.currency(fiatAmount / rate, 8);
 
         // save fiat amount now to fix value during payment
         u.paid = fiatAmount;
 
-        outputs.push({ address, bchAmount });
+        if (outputMap.hasOwnProperty(address)) {
+          outputMap[address].bchAmount += bchAmount;
+        } else {
+          outputMap[address] = { address, bchAmount }
+        }
       });
 
       // remove outputs bellow dust level
-      outputs = outputs.filter(o => o.bchAmount > 0.00000546);
+      let outputs = Object.values(outputMap).filter(o => o.bchAmount > 0.00000546);
+
+      // reuse or instantiate payment service
+      const index = state.previousPeriods.length;
+      this.service = this.service || new BitboxPaymentService(state.seed, index);
 
       // request a payment URL for the collected outputs
-      service.requestPaymentUrl(outputs, (err, url) => {
+      this.service.requestPaymentUrl(outputs, (err, url) => {
         this.paymentURL = url;
 
         // generate qrcode for URL
@@ -143,7 +165,7 @@ export default {
         });
 
         // wait for payment
-        service.waitForPaymentToUrl(url, (err, txid) => {
+        this.service.waitForPaymentToUrl(url, (err, txid) => {
           // save transaction id
           this.paymentTxId = txid;
           
@@ -158,6 +180,8 @@ export default {
       });
     },
     stopPayment() {
+      const service: PaymentService = this.service;
+      service.cancelPaymentToUrl(this.paymentURL, (error) => console.log(error));
       this.paying = false;
     },
     completePayment() {

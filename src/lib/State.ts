@@ -18,7 +18,7 @@ export class Period {
     readonly usage: UsageMap;
     end?: String;
     paid: boolean;
-    
+
     constructor() {
         this.start = new Date().toISOString();
         this.end = null;
@@ -35,17 +35,17 @@ export class Period {
         if (! usage) {
             usage = this.usage[payable.id] = new UsedPayable(payable);
         }
-        
+
         // add usage
         usage.seconds += seconds;
-        
+
         // update payable mutable details
         usage.payable.content.title = payable.content.title;
         if (usage.payable.account && payable.account) {
             usage.payable.account.name = payable.account.name;
         }
     }
-    
+
     remove(payable: Payable) {
         delete this.usage[payable.id];
     }
@@ -58,7 +58,7 @@ export interface Settings {
     excludedUrls: string[];
 }
 
-interface StorageChanges { 
+interface StorageChanges {
     [key: string]: chrome.storage.StorageChange;
 }
 
@@ -66,35 +66,42 @@ export class PersistentState {
     currentPeriod: Period;
     settings: Settings;
     previousPeriods: Period[];
+    seed: string;
 
-    constructor() {
+    constructor(initializer?: (loaded: PersistentState) => void) {
         this.currentPeriod = new Period();
         this.previousPeriods = [];
+        this.seed = null;
         this.settings = {
             currency: 'USD',
             minAmount: 0.1,
             rate: 1.0,
             excludedUrls: []
         };
-        
-        this.load();
+
+        this.load(initializer);
     }
-    
-    protected load() {
+
+    protected load(initializer?: (loaded: PersistentState) => void) {
         // get stored state
         chrome.storage.local.get((items: { [key: string]: any }) => {
             // initialize state from stored json
             if (items.state) {
                 this.updateFrom(items.state);
             }
-            
+
+            // invoke provided initializer
+            if (initializer) {
+                initializer(this);
+            }
+
             // monitor changes to update previously loaded state
             chrome.storage.onChanged.addListener((changes: StorageChanges, areaName: string) => {
                 this.updateFrom(changes.state.newValue);
             });
         });
     }
-    
+
     protected updateFrom(json: any) {
         Object.assign(this, json);
         Object.setPrototypeOf(this.currentPeriod, Period.prototype);
@@ -110,7 +117,7 @@ export class PersistentState {
         this.settings.rate = this.settings.rate || 1.0;
         this.settings.excludedUrls = this.settings.excludedUrls || [];
     }
-    
+
     startNewPeriod(): Period {
         this.currentPeriod.close();
         this.previousPeriods.push(this.currentPeriod);
