@@ -77,7 +77,7 @@ export class BitboxPaymentService implements PaymentService {
         }
       },
       r: {
-        "f": `[ .[] | { txid: .tx.h, out: [ .out[] | select(.e.a == \\"${address}\\") | . | { i: .i, value: .e.v } ] }]`
+        "f": `[ .[] | { txid: .tx.h, out: [ .out[] | select(.e.a == \"${address}\") | . | { i: .i, value: .e.v } ] }]`
       }
     };
   }
