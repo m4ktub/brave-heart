@@ -89,15 +89,8 @@ export class BitboxPaymentService implements PaymentService {
   }
 
   cancelPaymentToUrl(bchUrl: string, callback: (error: Error) => void): void {
-    if (this.eventSource == null) {
-      return;
-    }
-
-    if (this.eventSource.readyState == this.eventSource.CLOSED) {
-      return;
-    }
-
     this.eventSource.close();
+    callback(null);
   }
 
   waitForPaymentToUrl(url: string, callback: (error: Error, txId: string) => void): void {
