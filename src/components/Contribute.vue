@@ -181,8 +181,13 @@ export default {
     },
     stopPayment() {
       const service: PaymentService = this.service;
-      service.cancelPaymentToUrl(this.paymentURL, (error) => console.log(error));
-      this.paying = false;
+      service.cancelPaymentToUrl(this.paymentURL, (error) => {
+        this.paying = false;
+        
+        if (error) {
+          console.log(error)
+        }
+      });
     },
     completePayment() {
       let state: PersistentState = this.state;
