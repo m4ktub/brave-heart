@@ -28,7 +28,6 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
             sendResponse(true);
             break;
         default:
-            console.log("[Brave Heart] Unrecognized message: " + message.id, message);
             sendResponse(false);
             break;
     }
@@ -43,7 +42,6 @@ function scan() {
 
     const payable = scanner.scan(document);
     if (payable != null) {
-        console.log("[Brave Heart] found payable content: ", payable);
         chrome.runtime.sendMessage(PayableFoundMessage.carrying(payable));
     }
 }
