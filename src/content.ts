@@ -1,9 +1,20 @@
-import { Payable } from "./lib/Payable";
 import { MessageType, Message, PayableFoundMessage } from "./lib/Messages";
-import { YoutubeScannerInstance, WebsiteScannerInstance, Scanner } from "./lib/Scanners";
+import { HeaderScanner } from "./lib/scanners/HeaderScanner";
+import { PayButtonScanner } from "./lib/scanners/PayButtonScanner";
+import { YoutubeScanner } from "./lib/scanners/YoutubeScanner";
+import { SequenceScanner } from "./lib/scanners/SequenceScanner";
+
 
 // list of scanners to run
-const availableScanners = [ YoutubeScannerInstance, WebsiteScannerInstance ];
+const availableScanners = [
+    // specific website scanners
+    new YoutubeScanner(),
+    // generic website scanners
+    new SequenceScanner([
+        new PayButtonScanner(),
+        new HeaderScanner(),
+    ]),
+];
 
 // register message dispatcher
 chrome.runtime.onMessage.addListener(onRuntimeMessage);
