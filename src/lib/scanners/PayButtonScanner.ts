@@ -6,7 +6,7 @@ import { WebsiteScanner } from "./WebsiteScanner";
  */
 export class PayButtonScanner extends WebsiteScanner implements Scanner {
 
-  private static Selector = "button[class='pay-button'][address]";
+  private static Selector = "button.pay-button[address]";
 
   protected scanAddressText(document: HTMLDocument) {
     const button = document.body.querySelector<HTMLButtonElement>(PayButtonScanner.Selector);

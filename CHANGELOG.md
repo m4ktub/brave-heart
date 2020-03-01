@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.2.1
+-------------
+
+  * Fixed detection of Pay Buttons with custom styles (#1)
+
 Version 0.2.0
 -------------
 
