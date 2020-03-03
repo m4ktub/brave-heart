@@ -30,8 +30,8 @@ export class ReadCashScanner implements Scanner {
     const title = document.title;
     const contentPath = match[2]
     const contentRef = match[3];
-    const contentId = `${accountUrl}/${contentPath}`
-    const contentUrl = `${contentId}-${contentRef}`
+    const contentId = `/${contentPath}`
+    const contentUrl = `${accountUrl}/${contentPath}-${contentRef}`
     const content = new Content(contentId, title, contentUrl);
 
     return fetch(contentUrl)
