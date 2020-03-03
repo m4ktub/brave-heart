@@ -3,12 +3,13 @@ import { HeaderScanner } from "./lib/scanners/HeaderScanner";
 import { PayButtonScanner } from "./lib/scanners/PayButtonScanner";
 import { YoutubeScanner } from "./lib/scanners/YoutubeScanner";
 import { SequenceScanner } from "./lib/scanners/SequenceScanner";
-
+import { ReadCashScanner } from "./lib/scanners/ReadCashScanner";
 
 // list of scanners to run
 const availableScanners = [
     // specific website scanners
     new YoutubeScanner(),
+    new ReadCashScanner(),
    // generic website scanners
     new SequenceScanner([
         new PayButtonScanner(),
