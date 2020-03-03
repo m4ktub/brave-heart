@@ -1,6 +1,12 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.3.0
+-------------
+
+  * Added support for read.cash
+  * Added support for general donation areas in websites (#2)
+
 Version 0.2.1
 -------------
 
