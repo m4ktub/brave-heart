@@ -3,7 +3,7 @@
     <div class="line" v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
       <div class="left">
         <div class="icon">
-          <img :src="'chrome://favicon/size/32/' + producer.url" />
+          <img :src="'chrome://favicon/size/32/' + producer.site" />
         </div>     
       </div>
       <div class="right">

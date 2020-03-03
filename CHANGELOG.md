@@ -6,6 +6,7 @@ Version 0.3.0
 
   * Added support for read.cash
   * Added support for general donation areas in websites (#2)
+  * Fixed favicon display for some websites
 
 Version 0.2.1
 -------------
