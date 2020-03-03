@@ -4,6 +4,7 @@ import { PayButtonScanner } from "./lib/scanners/PayButtonScanner";
 import { YoutubeScanner } from "./lib/scanners/YoutubeScanner";
 import { SequenceScanner } from "./lib/scanners/SequenceScanner";
 import { ReadCashScanner } from "./lib/scanners/ReadCashScanner";
+import { DonationScanner } from './lib/scanners/DonationScanner';
 
 // list of scanners to run
 const availableScanners = [
@@ -14,6 +15,7 @@ const availableScanners = [
     new SequenceScanner([
         new PayButtonScanner(),
         new HeaderScanner(),
+        new DonationScanner(),
     ]),
 ];
 
