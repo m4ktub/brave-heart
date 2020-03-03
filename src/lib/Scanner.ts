@@ -8,6 +8,7 @@ import { Payable } from "./Payable";
  * and producing a payable content when ascked.
  */
 export interface Scanner {
+
     /**
      * Checks if the given page is acceptable, that is, if the scanner can
      * extract a payable content from the page.
@@ -15,6 +16,7 @@ export interface Scanner {
      * @param document the page to accept
      */
     accepts(document: HTMLDocument): boolean;
+
     /**
      * Extracts a payable content from the given page.
      *
@@ -24,5 +26,6 @@ export interface Scanner {
      *
      * @param document the page to process
      */
-    scan(document: HTMLDocument): Payable | null;
+    scan(document: HTMLDocument): Promise<Payable | null>;
+
 }

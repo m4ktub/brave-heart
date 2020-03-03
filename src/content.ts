@@ -9,7 +9,7 @@ import { SequenceScanner } from "./lib/scanners/SequenceScanner";
 const availableScanners = [
     // specific website scanners
     new YoutubeScanner(),
-    // generic website scanners
+   // generic website scanners
     new SequenceScanner([
         new PayButtonScanner(),
         new HeaderScanner(),
@@ -40,10 +40,11 @@ function scan() {
         return;
     }
 
-    const payable = scanner.scan(document);
-    if (payable != null) {
-        chrome.runtime.sendMessage(PayableFoundMessage.carrying(payable));
-    }
+    scanner.scan(document).then(payable => {
+        if (payable != null) {
+            chrome.runtime.sendMessage(PayableFoundMessage.carrying(payable));
+        }
+    });
 }
 
 // ensure periodic scan

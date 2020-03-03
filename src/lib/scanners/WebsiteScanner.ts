@@ -17,17 +17,18 @@ export class WebsiteScanner implements Scanner {
     return true;
   }
 
-  scan(document: HTMLDocument): Payable | null {
+  scan(document: HTMLDocument): Promise<Payable | null> {
     let address = this.scanAddress(document);
     if (!address) {
-      return null;
+      return Promise.resolve(null);
     }
 
     let site = this.scanSite(document);
     let account = this.scanAccount(document);
     let content = this.scanContent(document);
 
-    return this.buildPayable(site, account, content, address);
+    let payable = this.buildPayable(site, account, content, address);
+    return Promise.resolve(payable);
   }
 
   protected scanAddress(document: HTMLDocument): string | null {
