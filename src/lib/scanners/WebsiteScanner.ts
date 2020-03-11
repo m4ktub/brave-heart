@@ -1,6 +1,6 @@
 import { Content, Account, Payable } from "../Payable";
 import { Scanner } from "../Scanner";
-import * as bchaddr from "bchaddrjs";
+import { AddressExtractor } from '../Address';
 
 /**
  * A general scanner that looks for addresses in the page content.
@@ -11,7 +11,7 @@ import * as bchaddr from "bchaddrjs";
  */
 export class WebsiteScanner implements Scanner {
 
-  private static CashAddrRegExp = new RegExp("(bitcoincash:)?[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{42,}|(BITCOINCASH:)?[QPZRY9X8GF2TVDW0S3JN54KHCE6MUA7L]{42,}", "g");
+  protected readonly addressExtractor = new AddressExtractor();
 
   accepts(document: HTMLDocument) {
     return true;
@@ -33,8 +33,7 @@ export class WebsiteScanner implements Scanner {
 
   protected async scanAddress(document: HTMLDocument): Promise<string | null> {
     let text = this.scanAddressText(document) || "";
-    let candidates = text.match(WebsiteScanner.CashAddrRegExp) || [];
-    return candidates.find(bchaddr.isCashAddress) || null;
+    return this.addressExtractor.extract(text);
   }
 
   protected scanAddressText(document: HTMLDocument): string {
