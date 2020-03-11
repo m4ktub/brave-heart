@@ -17,27 +17,27 @@ export class WebsiteScanner implements Scanner {
     return true;
   }
 
-  scan(document: HTMLDocument): Promise<Payable | null> {
-    let address = this.scanAddress(document);
-    if (!address) {
-      return Promise.resolve(null);
-    }
+  async scan(document: HTMLDocument): Promise<Payable | null> {
+    return this.scanAddress(document).then(address => {
+      if (!address) {
+        return null;
+      }
 
-    let site = this.scanSite(document);
-    let account = this.scanAccount(document);
-    let content = this.scanContent(document);
+      let site = this.scanSite(document);
+      let account = this.scanAccount(document);
+      let content = this.scanContent(document);
 
-    let payable = this.buildPayable(site, account, content, address);
-    return Promise.resolve(payable);
+      return this.buildPayable(site, account, content, address);
+    });
   }
 
-  protected scanAddress(document: HTMLDocument): string | null {
+  protected async scanAddress(document: HTMLDocument): Promise<string | null> {
     let text = this.scanAddressText(document) || "";
     let candidates = text.match(WebsiteScanner.CashAddrRegExp) || [];
     return candidates.find(bchaddr.isCashAddress) || null;
   }
 
-  protected scanAddressText(document: HTMLDocument) {
+  protected scanAddressText(document: HTMLDocument): string {
     return document.head.innerHTML + document.body.innerHTML;
   }
 
