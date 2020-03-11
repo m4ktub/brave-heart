@@ -9,7 +9,7 @@ interface CashAccountPaymentData {
 
 export class CashAccount {
 
-  public static RegExp = new RegExp("(.{1,99})#([0-9]{1,7})(\.([0-9]{1,10}))?;?", "u");
+  public static RegExp = new RegExp("([a-zA-Z0-9_]{1,99})#([0-9]{1,7})(\.([0-9]{1,10}))?;?");
 
   readonly service: BitboxCashAccounts;
 
