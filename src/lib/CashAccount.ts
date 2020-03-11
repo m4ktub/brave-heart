@@ -11,7 +11,7 @@ export class CashAccount {
 
   public static RegExp = new RegExp("([a-zA-Z0-9_]{1,99})#([0-9]{1,7})(\.([0-9]{1,10}))?;?");
 
-  readonly service: BitboxCashAccounts;
+  private readonly service: BitboxCashAccounts;
 
   constructor() {
     this.service = new BitboxCashAccounts();
