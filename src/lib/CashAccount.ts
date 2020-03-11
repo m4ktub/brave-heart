@@ -32,7 +32,7 @@ export class CashAccount {
     const payment = (result.information.payment as any[]) as CashAccountPaymentData[];
     const method = payment.find(method =>method.type == "Key Hash" || method.type == "Script Hash");
 
-    return method?.address || null;
+    return method === undefined ? null : method.address;
   }
 
 }
