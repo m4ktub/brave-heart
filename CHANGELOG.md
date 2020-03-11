@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.4.0
+-------------
+
+  * Also detect Cash Accounts and translate them into an address
+
 Version 0.3.0
 -------------
 
