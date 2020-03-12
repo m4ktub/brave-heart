@@ -5,6 +5,7 @@ Version 0.4.0
 -------------
 
   * Also detect Cash Accounts and translate them into an address
+  * Added support for Twitter
 
 Version 0.3.0
 -------------
