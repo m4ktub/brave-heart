@@ -19,7 +19,7 @@ export class AddressExtractor {
     }
 
     const accountMatches = text.match(AddressExtractor.AccountRegExp) || [];
-    const resolveAccount = AddressExtractor.CashAccountResolver.resolve;
+    const resolveAccount = (text: string) => AddressExtractor.CashAccountResolver.resolve(text);
     const notNull = (address: Address) => address != null;
     return asyncMapFind(accountMatches, resolveAccount, notNull);
   }
