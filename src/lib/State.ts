@@ -116,6 +116,17 @@ export class PersistentState {
 
         this.settings.rate = this.settings.rate || 1.0;
         this.settings.excludedUrls = this.settings.excludedUrls || [];
+
+        // v0.4.1 fixes
+        [this.currentPeriod].concat(this.previousPeriods).forEach(period => {
+            const periodKeys = Object.keys(period.usage);
+            for (const key of periodKeys) {
+                const used = period.usage[key];
+                if (!used.payable.address) {
+                    delete period.usage[key];
+                }
+            }
+        });
     }
 
     startNewPeriod(): Period {
