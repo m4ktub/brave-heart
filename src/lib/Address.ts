@@ -13,7 +13,7 @@ export class AddressExtractor {
 
  async extract(text: string): Promise<Address> {
     const addressMatches = text.match(AddressExtractor.AddrRegExp) || [];
-    const address = addressMatches.find(AddressExtractor.AddressUtil.isCashAddress) || null;
+    const address = addressMatches.find(address => AddressExtractor.AddressUtil.isCashAddress(address)) || null;
     if (address) {
       return address;
     }
