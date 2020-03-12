@@ -5,12 +5,14 @@ import { YoutubeScanner } from "./lib/scanners/YoutubeScanner";
 import { SequenceScanner } from "./lib/scanners/SequenceScanner";
 import { ReadCashScanner } from "./lib/scanners/ReadCashScanner";
 import { DonationScanner } from './lib/scanners/DonationScanner';
+import { TwitterScanner } from './lib/scanners/TwitterScanner';
 
 // list of scanners to run
 const availableScanners = [
     // specific website scanners
     new YoutubeScanner(),
     new ReadCashScanner(),
+    new TwitterScanner(),
    // generic website scanners
     new SequenceScanner([
         new PayButtonScanner(),

@@ -1,12 +1,13 @@
-import { 
+import {
     MessageType,
     Message,
     PayableFoundMessage,
-    PayableRescanMessage
+    PayableRescanMessage,
+    FetchJsonMessage,
 } from "./lib/Messages";
 import { Payable } from "./lib/Payable";
 import { PersistentState } from "./lib/State";
- 
+
 /**
  * Persistent state with usage during current period and user options.
  */
@@ -27,15 +28,15 @@ var tabs: { [key: string]: Payable } = {
 function monitor() {
     function accumulateTab(tab: chrome.tabs.Tab) {
         let payable = tabs[tab.id];
-        
+
         if (!payable) {
             return;
         }
-        
+
         state.currentPeriod.trackUsage(payable, 1);
         state.save();
     }
-    
+
     chrome.windows.getLastFocused((window: chrome.windows.Window) => {
         chrome.tabs.query({ active: true, windowId: window.id }, (activeTabs: chrome.tabs.Tab[]) => {
             // accumulate usage in active tab, if window is focused
@@ -44,7 +45,7 @@ function monitor() {
                 activeTabs.forEach(accumulateTab);
                 accounted = activeTabs;
             }
-            
+
             // find tabs with sound
             chrome.tabs.query({ audible: true }, (audibleTabs: chrome.tabs.Tab[]) => {
                 const notAccounted = (tab: chrome.tabs.Tab) => accounted.find(t => t.id == tab.id) == undefined;
@@ -77,6 +78,13 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
             onPayableFound(sender.tab, payableMsg.payable);
             sendResponse(true);
             break;
+        case MessageType.FetchJson:
+            const fetchMessage = msg as FetchJsonMessage;
+            fetch(fetchMessage.url, fetchMessage.options)
+                .then(response => response.json())
+                .then(data => sendResponse({ data }))
+                .catch(error => sendResponse({ error }));
+            break;
         default:
             console.log("Unrecognized message: " + message.id, message);
             sendResponse(false);
@@ -91,7 +99,7 @@ function onTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab:
     if (changeInfo.status == "complete") {
         // remove current usage associated with tab
         delete tabs[tabId];
-        
+
         // request scan of new payable
         chrome.tabs.sendMessage(tabId, new PayableRescanMessage());
     }
