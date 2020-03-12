@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.4.1
+-------------
+
+  * Fix detection of empty addresses in Twitter
+
 Version 0.4.0
 -------------
 

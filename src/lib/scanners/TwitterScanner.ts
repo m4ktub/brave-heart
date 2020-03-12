@@ -80,7 +80,9 @@ export class TwitterScanner implements Scanner {
     // check simple cache to avoid repeated requests
     if (this.cache.has(url.screenName)) {
       const cachedAddress = this.cache.get(url.screenName);
-      return new Payable(site, account, content, cachedAddress);
+      if (cachedAddress) {
+        return new Payable(site, account, content, cachedAddress);
+      }
     }
 
     // create fetch message to send to background
