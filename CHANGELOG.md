@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.5.0
+-------------
+
+  * Added option to change fiat currency
+
 Version 0.4.1
 -------------
 

@@ -16,7 +16,7 @@
           <button v-on:click.prevent="payment = 5.00">{{ asCurrency(5) }}</button>
           <button v-on:click.prevent="payment = 10.00">{{ asCurrency(10) }}</button>
           <button v-on:click.prevent="payment = 20.00">{{ asCurrency(20) }}</button>
-          <strong>$</strong><input type="number" min="1.00" step="0.10" v-model.number="payment"
+          <strong>{{ currencyCode }}</strong><input type="number" min="1.00" step="0.10" v-model.number="payment"
                   placeholder="0.00"/>
         </fieldset>
         <div class="actions">
@@ -248,6 +248,10 @@ export default {
     hasUsage() {
       let period = this.paymentPeriod as Period;
       return Object.keys(period.usage).length > 0;
+    },
+    currencyCode() {
+      let state: PersistentState = this.state;
+      return Currency.code(state.settings.currency);
     }
   }
 }
