@@ -24,11 +24,17 @@
     </div>
     <usage v-bind:period="visiblePeriod">
       <template v-slot:details="{ producer }">
+        <span v-if="producer.manual">
+          | <fa-icon icon="pencil-alt"/>
+        </span>
         <span v-if="isPeriodPaid">
           | {{ asCurrency(producer.paid) }}
         </span>
       </template>
       <template v-slot:actions="{ producer }">
+          <a v-on:click="toggleManual(producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+            <fa-icon icon="pencil-alt"/>
+          </a>
           <a v-on:click="excludeProducer(producer)" class="button action">
             <fa-icon icon="ban"/>
           </a>
@@ -65,6 +71,11 @@ export default {
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
+      state.save();
+    },
+    toggleManual(producer: UiProducer) {
+      let state: PersistentState = this.state;
+      producer.contents.forEach(c => c.manual = !c.manual);
       state.save();
     },
     openOptions() {

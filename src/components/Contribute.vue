@@ -25,11 +25,27 @@
           </button>
         </div>
       </form>
-      <usage ref="usage" v-if="hasUsage" v-bind:period="paymentPeriod">
+      <usage ref="manualUsage" v-if="hasUsage" v-bind:period="paymentPeriod" show="manual">
+        <template v-slot:details="{ producer }">
+          | {{ currencyCode }}<input type="number" min="0.00" step="0.10" v-model.number="producer.paid" placeholder="0.00"/>
+        </template>
+        <template v-slot:actions="{ producer, usage }">
+          <a v-on:click="toggleManual(usage, producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+            <fa-icon icon="pencil-alt"/>
+          </a>
+          <a v-on:click="excludeProducer(producer)" class="button action">
+            <fa-icon icon="ban"/>
+          </a>
+        </template>
+      </usage>
+      <usage ref="autoUsage" v-if="hasUsage" v-bind:period="paymentPeriod" show="automatic">
         <template v-slot:details="{ producer, usage }">
           | {{ asCurrency(producerValue(usage, producer)) }}
         </template>
-        <template v-slot:actions="{ producer }">
+        <template v-slot:actions="{ producer, usage }">
+          <a v-on:click="toggleManual(usage, producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+            <fa-icon icon="pencil-alt"/>
+          </a>
           <a v-on:click="excludeProducer(producer)" class="button action">
             <fa-icon icon="ban"/>
           </a>
@@ -203,7 +219,19 @@ export default {
       state.save();
     },
     producerValue(usage: UiUsage, producer: UiProducer): number {
-      return Currency.proportion(this.payment, producer.seconds, usage.seconds);
+      const manual = usage.producers
+        .filter(p => p.manual)
+        .reduce((acc, p) => {
+          return { 
+            paid: acc.paid + p.paid, 
+            seconds: acc.seconds + p.seconds
+          }
+        }, { 
+          paid: 0, 
+          seconds: 0 
+        });
+
+      return Currency.proportion(this.payment - manual.paid, producer.seconds, usage.seconds - manual.seconds);
     },
     asCurrency(value: number, code?: string) {
       let state: PersistentState = this.state;
@@ -215,6 +243,21 @@ export default {
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
+      state.save();
+    },
+    toggleManual(usage: UiUsage, producer: UiProducer) {
+      let state: PersistentState = this.state;
+      
+      if (producer.manual) {
+        // make automatic, reset paid valie
+        producer.paid = 0;
+        producer.manual = false;
+      } else {
+        // make manual, start with automatic paid value
+        producer.paid = this.producerValue(usage, producer);
+        producer.manual = true;
+      }
+
       state.save();
     },
     copyPaymentURL() {
@@ -242,7 +285,7 @@ export default {
       return this.period || state.currentPeriod;
     },
     paymentUsage() {
-      let usage = this.$refs.usage;
+      let usage = this.$refs.autoUsage;
       return usage.visibleUsage as UiUsage;
     },
     hasUsage() {

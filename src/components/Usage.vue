@@ -1,6 +1,8 @@
 <template>
   <div class="usage">
-    <div class="line" v-for="producer in visibleUsage.producers" v-bind:key="producer.url">
+    <div class="line" v-for="producer in visibleProducers"
+      v-bind:key="producer.url" 
+      v-bind:class="{ manual: producer.manual }">
       <div class="left">
         <div class="icon">
           <img :src="'chrome://favicon/size/32/' + producer.site" />
@@ -10,7 +12,12 @@
         <div class="top">
           <span class="title">{{ producer.title }}</span>
           <span class="details">
-            <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}
+            <span v-if="!producer.manual">
+              <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> {{ producer.seconds | asDuration }}
+            </span>
+            <span v-if="producer.manual">
+              <fa-icon v-bind:icon="['far', 'clock']" size="xs"/> --
+            </span>
             <slot name="details" v-bind:usage="visibleUsage" v-bind:producer="producer"></slot>
           </span>
         </div>
@@ -33,7 +40,7 @@ import { TimeFormatter } from "../lib/Time";
 const formatter = new TimeFormatter();
 
 export default {
-  props: [ "period" ],
+  props: [ "period", "show" ],
   data() {
     return {
       state: new PersistentState()
@@ -43,7 +50,18 @@ export default {
     visibleUsage() {
       let state: PersistentState = this.state;
       let period: Period = this.period;
+      let showManual: boolean = this.showManual;
       return new UiUsage(period.usage, state.settings);
+    },
+    visibleProducers() {
+      let visibleUsage: UiUsage = this.visibleUsage;
+      return visibleUsage.producers.filter(p => {
+        switch (this.show) {
+          case "manual": return p.manual;
+          case "automatic": return !p.manual;
+          default: return true;
+        }
+      });
     }
   },
   filters: {

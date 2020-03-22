@@ -3,9 +3,11 @@ import { Payable, Account, Content } from "./Payable";
 export class UsedPayable {
     paid: number;
     seconds: number;
+    manual: boolean;
     constructor(readonly payable: Payable) {
         this.paid = 0;
         this.seconds = 0;
+        this.manual = false;
     }
 }
 

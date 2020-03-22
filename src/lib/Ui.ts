@@ -1,9 +1,11 @@
 import { UsedPayable, UsageMap, Settings } from "./State";
 import { Account } from "./Payable";
+import { Currency } from './Currency';
 
 interface Used {
     seconds: number;
     paid: number;
+    manual: boolean;
 }
 
 function sum<T>(objects: T[], f: (o: T) => number): number {
@@ -15,7 +17,7 @@ function sumSeconds(objects: Used[]) {
 }
 
 function sumPaid(objects: Used[]) {
-    return sum(objects, o => o.paid);
+    return Currency.currency(sum(objects, o => o.paid));
 }
 
 function sortBySecondsDesc<T extends Used>(objects: T[]): T[] {
@@ -39,7 +41,7 @@ export class UiUsage {
         // filter conributables matching excluded urls
         let filtered = Object.values(usage).filter(used => {
             let p = used.payable;
-            
+
             if (excluded.has(p.site)) {
                 return false;
             }
@@ -87,13 +89,15 @@ export class UiProducer {
     readonly title: string;
     readonly seconds: number;
     readonly url: string;
-    readonly paid: number;
     readonly contents: UsedPayable[];
+    private _paid: number;
+    private _manual: boolean;
 
     constructor(readonly site: string, readonly account: Account, contents: UsedPayable[]) {
         this.contents = sortBySecondsDesc(contents);
         this.seconds = sumSeconds(contents);
-        this.paid = sumPaid(contents);
+        this._paid = sumPaid(contents);
+        this._manual = contents.every(c => c.manual);
 
         if (this.contents.length == 1) {
             let c = this.contents[0].payable;
@@ -104,4 +108,33 @@ export class UiProducer {
             this.url = account ? account.url : site;
         }
     }
+
+    get paid(): number {
+        return this._paid;
+    }
+
+    set paid(value: number) {
+        // save total paid value
+        this._paid = Currency.currency(value);
+
+        // propagate paid value to contents, proportionally
+        this.contents.forEach(content => {
+            content.paid = Currency.proportion(value, content.seconds, this.seconds);
+        });
+
+        // adjust first content due to rounding errors
+        this.contents[0].paid += this._paid - sumPaid(this.contents);
+    }
+
+    get manual(): boolean {
+        return this._manual;
+    }
+
+    set manual(value: boolean) {
+        this._manual = value;
+        this.contents.forEach(content => {
+            content.manual = value;
+        });
+    }
+
 }

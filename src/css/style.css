@@ -72,6 +72,14 @@ html, body {
   height: 22px;
 }
 
+.usage .line.manual .right .top {
+  height: 26px;
+}
+
+.usage .line.manual .right .top input[type='number'] {
+  width: 50px;
+}
+
 .usage .line .right .bottom {
   display: flex;
   height: 22px;
@@ -118,9 +126,24 @@ html, body {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.usage .actions .button:not(:last-child) {
+  margin-right: 4px;
+}
+
 .usage .actions .button:hover {
   cursor: pointer;
   background-color: rgba(10, 193, 141, 0.5);
+}
+
+.usage .actions .button.active {
+  cursor: pointer;
+  background-color: rgba(10, 193, 141, 0.5);
+}
+
+.usage .actions .button.active:hover {
+  cursor: pointer;
+  color: white;
+  background-color: rgb(5, 109, 80);
 }
 
 .popup {
