@@ -27,7 +27,9 @@
       </form>
       <usage ref="manualUsage" v-if="hasUsage" v-bind:period="paymentPeriod" show="manual">
         <template v-slot:details="{ producer }">
-          | {{ currencyCode }}<input type="number" min="0.00" step="0.10" v-model.number="producer.paid" placeholder="0.00"/>
+          | {{ currencyCode }}<input type="number" min="0.00" step="0.10" placeholder="0.00"
+                                     v-model.number="producer.paid" 
+                                     v-on:change="save"/>
         </template>
         <template v-slot:actions="{ producer, usage }">
           <a v-on:click="toggleManual(usage, producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
@@ -277,6 +279,10 @@ export default {
       // briefly show copied message
       this.paymentURLCopied = true;
       setTimeout(() => this.paymentURLCopied = false, 5 * 1000);
+    },
+    save() {
+      let state: PersistentState = this.state;
+      state.save()
     }
   },
   computed: {
