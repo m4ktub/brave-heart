@@ -152,13 +152,16 @@ export default {
 
       const totalSeconds = usage.seconds;
       used.forEach(u => {
+        // calculate proportional fiat amount, when not manual
+        if (!u.manual) {
+          u.paid = Currency.proportion(this.payment, u.seconds, totalSeconds);
+        }
+
+        // calculate BCH amount
+        const bchAmount = Currency.currency(u.paid / rate, 8);
+        
+        // add value to outputs, possibly accumulating in an existing address
         const address = u.payable.address; 
-        const fiatAmount = Currency.proportion(this.payment, u.seconds, totalSeconds);
-        const bchAmount = Currency.currency(fiatAmount / rate, 8);
-
-        // save fiat amount now to fix value during payment
-        u.paid = fiatAmount;
-
         if (outputMap.hasOwnProperty(address)) {
           outputMap[address].bchAmount += bchAmount;
         } else {
