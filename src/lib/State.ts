@@ -32,7 +32,7 @@ export class Period {
         this.end = new Date().toISOString();
     }
 
-    trackUsage(payable: Payable, seconds: number = 0) {
+    trackUsage(payable: Payable, seconds: number = 0): UsedPayable {
         let usage = this.usage[payable.id];
         if (! usage) {
             usage = this.usage[payable.id] = new UsedPayable(payable);
@@ -46,6 +46,8 @@ export class Period {
         if (usage.payable.account && payable.account) {
             usage.payable.account.name = payable.account.name;
         }
+
+        return usage;
     }
 
     remove(payable: Payable) {
