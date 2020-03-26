@@ -5,6 +5,8 @@ Version 0.5.0
 -------------
 
   * Added option to change fiat currency
+  * Allow to manually edit the donation value of some entries
+  * Automatically start next period with entries manually edited
 
 Version 0.4.1
 -------------
