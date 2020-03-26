@@ -128,6 +128,11 @@ export class UiProducer {
     }
 
     set paid(value: number) {
+        // ignore invalid values coming from the UI
+        if (typeof value !== "number") {
+            return;
+        }
+
         // save total paid value
         this._paid = Currency.currency(value);
 
