@@ -234,6 +234,7 @@ export default {
         .forEach(u => {
           const newUsage = newPeriod.trackUsage(u.payable);
           newUsage.manual = true;
+          newUsage.paid = u.paid;
         });
 
       // save state
