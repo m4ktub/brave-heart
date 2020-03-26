@@ -219,8 +219,21 @@ export default {
       // mark period as paid
       state.currentPeriod.paid = true;
 
-      // start a new blank period and save state
+      // start a new blank period 
       state.startNewPeriod();
+
+      // copy manual constributions into the next period
+      let oldPeriod = state.previousPeriods[state.previousPeriods.length - 1];
+      let newPeriod = state.currentPeriod;
+
+      Object.values(oldPeriod.usage)
+        .filter(u => u.manual)
+        .forEach(u => {
+          const newUsage = newPeriod.trackUsage(u.payable);
+          newUsage.manual = true;
+        });
+
+      // save state
       state.save();
     },
     producerValue(usage: UiUsage, producer: UiProducer): number {
