@@ -7,6 +7,8 @@ Version 0.5.0
   * Added option to change fiat currency
   * Allow to manually edit the donation value of some entries
   * Automatically start next period with entries manually edited
+  * Fixed payment failure due to rounding errors
+  * Fixed address detection to avoid valid addresses from testnet
 
 Version 0.4.1
 -------------
