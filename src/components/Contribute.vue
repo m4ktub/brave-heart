@@ -29,6 +29,7 @@
         <template v-slot:details="{ producer }">
           | {{ currencyCode }}<input type="number" min="0.00" step="0.10" placeholder="0.00"
                                      v-model.number="producer.paid" 
+                                     v-bind:disabled="paymentPeriod.paid"
                                      v-on:change="save"/>
         </template>
         <template v-slot:actions="{ producer, usage }">
