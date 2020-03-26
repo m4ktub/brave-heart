@@ -83,8 +83,10 @@ export class BitboxPaymentService implements PaymentService {
   }
 
   requestPaymentUrl(outputs: TxOut[], callback: (error: Error, bchUrl: string) => void): void {
-    this.outputs = outputs;
-    const amount = outputs.reduceRight((acc, output) => acc + output.bchAmount, 0);
+    // fix: sometimes scanners detect testnet addresses and we ensure those are simply ignored
+    this.outputs = outputs.filter(o => Bitbox.Address.detectAddressNetwork(o.address) === "mainnet");
+
+    const amount = this.outputs.reduceRight((acc, output) => acc + output.bchAmount, 0);
     callback(null, `${this.address}?amount=${amount.toFixed(8)}`);
   }
 
@@ -132,7 +134,10 @@ export class BitboxPaymentService implements PaymentService {
 
       // add outputs and account for dust
       this.outputs.forEach(output => {
-        const outValue = Bitbox.BitcoinCash.toSatoshi(output.bchAmount);
+        // fix: the BCH amount can be inexact (more than 8 decimal places)
+        //      and the conversion to satoshis may result in a decimal number.
+        //      Rounding ensures we are dealing with a whole number of satoshis.
+        const outValue = Math.round(Bitbox.BitcoinCash.toSatoshi(output.bchAmount));
         if (satoshis > (outValue + 546)) {
           builder.addOutput(output.address, outValue);
           satoshis -= outValue;
