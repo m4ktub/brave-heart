@@ -83,6 +83,20 @@ export class UiUsage {
 
         return sortBySecondsDesc(producers);
     }
+
+    public manualTotals() {
+        return this.producers
+            .filter(p => p.manual)
+            .reduce((acc, p) => {
+                return {
+                    paid: acc.paid + p.paid,
+                    seconds: acc.seconds + p.seconds
+                }
+            }, {
+                paid: 0,
+                seconds: 0
+            });
+    }
 }
 
 export class UiProducer {

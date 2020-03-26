@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="payinfo">
-          {{ asCurrency(payment) }} / {{ asCurrency(paymentBCH, "BCH") }}
+          {{ asCurrency(finalPayment) }} / {{ asCurrency(paymentBCH, "BCH") }}
         </div>
       </div>
     </div> 
@@ -141,11 +141,12 @@ export default {
 
       // get rate and calculate total BCH value
       const rate = state.settings.rate;
-      this.paymentBCH = Currency.currency(this.payment / rate, 8);
+      this.paymentBCH = Currency.currency(this.finalPayment / rate, 8);
 
       // collect all used payables
       const usage = this.paymentUsage as UiUsage;
-      let used = flatten(usage.producers.map(p => p.contents));
+      const used = flatten(usage.producers.map(p => p.contents));
+      const manual = usage.manualTotals();
 
       // collect outputs for payment
       let outputMap: { [key: string]: TxOut } = {};
@@ -154,7 +155,8 @@ export default {
       used.forEach(u => {
         // calculate proportional fiat amount, when not manual
         if (!u.manual) {
-          u.paid = Currency.proportion(this.payment, u.seconds, totalSeconds);
+          const value = Math.max(0, this.finalPayment - manual.paid);
+          u.paid = Currency.proportion(value, u.seconds, totalSeconds);
         }
 
         // calculate BCH amount
@@ -237,19 +239,9 @@ export default {
       state.save();
     },
     producerValue(usage: UiUsage, producer: UiProducer): number {
-      const manual = usage.producers
-        .filter(p => p.manual)
-        .reduce((acc, p) => {
-          return { 
-            paid: acc.paid + p.paid, 
-            seconds: acc.seconds + p.seconds
-          }
-        }, { 
-          paid: 0, 
-          seconds: 0 
-        });
-
-      return Currency.proportion(this.payment - manual.paid, producer.seconds, usage.seconds - manual.seconds);
+      const manual = usage.manualTotals();
+      const value = Math.max(0, this.payment - manual.paid);
+      return Currency.proportion(value, producer.seconds, usage.seconds - manual.seconds);
     },
     asCurrency(value: number, code?: string) {
       let state: PersistentState = this.state;
@@ -317,6 +309,17 @@ export default {
     currencyCode() {
       let state: PersistentState = this.state;
       return Currency.code(state.settings.currency);
+    },
+    finalPayment() {
+      const usage = this.paymentUsage as UiUsage;
+      const manual = usage.manualTotals();
+      
+      const allAuto = usage.producers.every(p => p.manual);
+      if (allAuto) {
+        return manual.paid;
+      } else {
+        return Math.max(manual.paid, this.payment);
+      }
     }
   }
 }
