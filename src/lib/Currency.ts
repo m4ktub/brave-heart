@@ -23,12 +23,19 @@ export class Currency {
    * place where it is used. The final value will have as little error as possible and a
    * currency precision.
    *
+   * If the total is 0 then the proportion will be 0. Signs in either the part or total
+   * will be ignored although the sign of the amount will be used.
+   *
    * @param amount total amount to split
    * @param part the value of a given part
    * @param total the total value of all parts
    */
   static proportion(amount: number, part: number, total: number): number {
-    return this.currency(amount * part / total);
+    if (total == 0) {
+      return 0;
+    }
+
+    return this.currency(amount * Math.abs(part / total));
   }
 
   /**
