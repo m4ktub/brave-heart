@@ -24,11 +24,11 @@
     </div>
     <usage v-bind:period="visiblePeriod">
       <template v-slot:details="{ producer }">
-        <span v-if="producer.manual">
+        <span v-if="producer.manual && !isPeriodPaid">
           | <fa-icon icon="pencil-alt"/>
         </span>
         <span v-if="isPeriodPaid">
-          | {{ asCurrency(producer.paid) }}
+          | <fa-icon v-if="producer.manual" icon="pencil-alt"/> {{ asCurrency(producer.paid) }}
         </span>
       </template>
       <template v-slot:actions="{ producer }">
