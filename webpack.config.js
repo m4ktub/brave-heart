@@ -62,7 +62,8 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: 'manifest.json', transform: updateVersion },
       { from: 'pages/**/*.html' },
-      { from: 'images/**/*.*' }
+      { from: 'images/**/*.*' },
+      { from: '_locales/**/*.*' }
     ])
   ]
 };

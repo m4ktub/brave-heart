@@ -1,0 +1,70 @@
+{
+  "manifest_name": {
+    "message": "Brave Heart",
+    "description": "The extension's name"
+  },
+  "manifest_short_name": {
+    "message": "Brave Heart",
+    "description": "The extension's short name"
+  },
+  "manifest_description": {
+    "message": "Directly reward web producers with Bitcoin Cash and no trusted intermediaries",
+    "description": "The extension's description"
+  },
+  "manifest_default_title": {
+    "message": "Brave Heart",
+    "description": "The default title of the extension's button in the toolbar"
+  },
+  "popup_period_back": {
+    "message": "Previous period",
+    "description": "Tooltip for the button taking the user to the previous period"
+  },
+  "popup_period_forward": {
+    "message": "Next period",
+    "description": "Tooltip for the button taking the user to the next period"
+  },
+  "popup_settings": {
+    "message": "Settings",
+    "description": "Tooltip for the button taking the user to the settings page"
+  },
+  "popup_toggle_automatic": {
+    "message": "Switch to automatic contribution",
+    "description": "Tooltip for the button that toggles manual state when the entry is manual"
+  },
+  "popup_toggle_manual": {
+    "message": "Switch to manual contribution",
+    "description": "Tooltip for the button that toggles manual state when the entry is automatic"
+  },
+  "popup_ban": {
+    "message": "Exclude",
+    "description": "Tooltip for the button that removes the entry from the list permanently"
+  },
+  "popup_contribute_label": {
+    "message": "Contribute",
+    "description": "Label for the popup button that takes the user to the contribution page"
+  },
+  "date_from_to": {
+    "message": "From $from$ to $to$",
+    "description": "Presents the date range of a period in a user readable way",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "March 26, 2020"
+      },
+      "to": {
+        "content": "$2",
+        "example": "March 26, 2020"
+      }
+    }
+  },
+  "date_since": {
+    "message": "Since $from$",
+    "description": "Presents the start of a period in a user readable way",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "March 26, 2020"
+      }
+    }
+  }
+}
