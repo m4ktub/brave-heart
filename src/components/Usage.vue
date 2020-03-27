@@ -36,8 +36,9 @@
 import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
 import { UiUsage } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
+import { I18n } from '../lib/I18n';
 
-const formatter = new TimeFormatter();
+const formatter = new TimeFormatter(I18n);
 
 export default {
   props: [ "period", "show" ],
