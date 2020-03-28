@@ -1,6 +1,6 @@
 export interface Translator {
   language: string;
-  translate(key: string, substitutions: string[]): string;
+  translate(key: string, substitutions?: string[]): string;
 }
 
 class ChromeI18n implements Translator {
