@@ -46,7 +46,7 @@
     <div class="contribute">
         <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">
           <fa-icon icon="hand-holding-usd"/>
-          {{ t("popup_contribute_label") }}
+          {{ t("popup_contribute") }}
         </button>
     </div>
   </div>

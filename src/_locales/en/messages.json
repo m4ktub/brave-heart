@@ -39,9 +39,9 @@
     "message": "Exclude",
     "description": "Tooltip for the button that removes the entry from the list permanently"
   },
-  "popup_contribute_label": {
+  "popup_contribute": {
     "message": "Contribute",
-    "description": "Label for the popup button that takes the user to the contribution page"
+    "description": "Text for the popup button that takes the user to the contribution page"
   },
   "date_from_to": {
     "message": "From $from$ to $to$",
@@ -66,5 +66,87 @@
         "example": "March 26, 2020"
       }
     }
+  },
+  "currency_usd": {
+    "message": "United States dollar",
+    "description": "Name for the USD currency"
+  },
+  "currency_eur": {
+    "message": "Euro",
+    "description": "Name for the EUR currency"
+  },
+  "currency_aud": {
+    "message": "Australian dollar",
+    "description": "Name for the AUD currency"
+  },
+  "currency_brl": {
+    "message": "Brazilian real",
+    "description": "Name for the BRL currency"
+  },
+  "currency_cad": {
+    "message": "Canadian dollar",
+    "description": "Name for the CAD currency"
+  },
+  "currency_cny": {
+    "message": "Yuan",
+    "description": "Name for the CNY currency"
+  },
+  "currency_gbp": {
+    "message": "Pound sterling",
+    "description": "Name for the GBP currency"
+  },
+  "currency_inr": {
+    "message": "Indian rupee",
+    "description": "Name for the INR currency"
+  },
+  "currency_jpy": {
+    "message": "Japanese yen",
+    "description": "Name for the JPY currency"
+  },
+  "currency_krw": {
+    "message": "South Korean won",
+    "description": "Name for the KRW currency"
+  },
+  "currency_thb": {
+    "message": "Thai Baht",
+    "description": "Name for the THB currency"
+  },
+  "currency_rub": {
+    "message": "Russian ruble",
+    "description": "Name for the RUB currency"
+  },
+  "options_title": {
+    "message": "Options - $extension_name$",
+    "description": "Title of the options page, which includes the extension name",
+    "placeholders": {
+      "extension_name": {
+        "content": "$1",
+        "example": "Brave Heart"
+      }
+    }
+  },
+  "options_header": {
+    "message": "Brave Heart Extension Options",
+    "description": "Header text in the options page"
+  },
+  "options_contribute_section": {
+    "message": "Contribute",
+    "description": "Header of the contribute section"
+  },
+  "options_currency_label": {
+    "message": "Currency:",
+    "description": "Field label for selecting the currency"
+  },
+  "options_exclusions_section": {
+    "message": "Exclusions",
+    "description": "Header of the exclusions section"
+  },
+  "options_exclusions_description": {
+    "message": "List of URLs that where excluded and are no longer shown as part of the visited web sites during the period. Restoring the URL makes that site reappear in lists together with its current usage.",
+    "description": "Description of the exclusions section with explanation that it shows addresses excluded from the popup and that those can be restored"
+  },
+  "options_restore": {
+    "message": "Restore",
+    "description": "Text for for the restore button"
   }
 }
