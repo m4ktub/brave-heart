@@ -2,15 +2,15 @@
   <div class="contribute">
     <h1 class="header">
       <span v-if="paymentPeriod.paid">
-        Contributed {{ asCurrency(payment) }}
-        (<a target="_blank" v-bind:href="'https://blockchair.com/bitcoin-cash/transaction/' + paymentTxId">view transaction</a>)
+        {{ t("contribute_header_paid") }} {{ asCurrency(payment) }}
+        (<a target="_blank" v-bind:href="'https://blockchair.com/bitcoin-cash/transaction/' + paymentTxId">{{ t("contribute_title_view_tx") }}</a>)
       </span>
-      <span v-else>Contribute</span>
+      <span v-else>{{ t("contribute_header_normal") }}</span>
     </h1>
     <div class="body">
       <form class="payment" v-if="!paymentPeriod.paid">
         <fieldset>
-          <legend>Amount</legend>
+          <legend>{{ t("contribute_amount_label") }}</legend>
           <button v-on:click.prevent="payment = 1.00">{{ asCurrency(1) }}</button>
           <button v-on:click.prevent="payment = 2.00">{{ asCurrency(2) }}</button>
           <button v-on:click.prevent="payment = 5.00">{{ asCurrency(5) }}</button>
@@ -21,7 +21,7 @@
         </fieldset>
         <div class="actions">
           <button v-on:click.prevent="startPayment" v-bind:disabled="!hasUsage || paying">
-            <fa-icon icon="coins"/> Pay
+            <fa-icon icon="coins"/> {{ t("contribute_pay") }}
           </button>
         </div>
       </form>
@@ -33,10 +33,12 @@
                                      v-on:change="save"/>
         </template>
         <template v-slot:actions="{ producer, usage }">
-          <a v-on:click="toggleManual(usage, producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+          <a v-on:click="toggleManual(usage, producer)"
+             v-bind:class="{ button: true, action: true, active: producer.manual }"
+             v-bind:title="producer.manual ? t('action_toggle_automatic') : t('action_toggle_manual')">
             <fa-icon icon="pencil-alt"/>
           </a>
-          <a v-on:click="excludeProducer(producer)" class="button action">
+          <a v-on:click="excludeProducer(producer)" class="button action" v-bind:title="t('action_ban')">
             <fa-icon icon="ban"/>
           </a>
         </template>
@@ -46,41 +48,43 @@
           | {{ asCurrency(producerValue(usage, producer)) }}
         </template>
         <template v-slot:actions="{ producer, usage }">
-          <a v-on:click="toggleManual(usage, producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+          <a v-on:click="toggleManual(usage, producer)"
+             v-bind:class="{ button: true, action: true, active: producer.manual }"
+             v-bind:title="producer.manual ? t('action_toggle_automatic') : t('action_toggle_manual')"
+             >
             <fa-icon icon="pencil-alt"/>
           </a>
-          <a v-on:click="excludeProducer(producer)" class="button action">
+          <a v-on:click="excludeProducer(producer)" class="button action" v-bind:title="t('action_ban')">
             <fa-icon icon="ban"/>
           </a>
         </template>
       </usage>
       <div class="empty" v-else>
-        No Bitcoin Cash supporting sites have been visited in the active period.
+        {{ t("contribute_empty") }}
       </div>
     </div>
     <div class="paymodal" v-if="paying" v-on:click="stopPayment">
       <div class="paybox" v-on:click.stop>
         <div class="paytitle">
-          Payment
+          {{ t("contribute_pay_title") }}
         </div>
         <div class="paytext">
-          To start payment please scan the QR Code with a wallet.
-          You can also use one of the buttons below to use a local application.
+          {{ t("contribute_pay_text") }}
         </div>
         <div class="qrcontainer">
           <div class="qrcode">
             <img v-on:click="copyPaymentURL" v-bind:src="paymentDataURL">
           </div>
           <div class="qrmessage" v-if="paymentTxId">
-            Received!
+            {{ t("contribute_pay_received") }}
           </div>
           <div class="qrcopy">
             <input name="qrcopyinput" ref="qrcopyinput" v-bind:value="paymentURL" />
             <span v-show="paymentURLCopied">
-              Copied
+              {{ t("contribute_pay_copy_message") }}
             </span>
             <button v-on:click="copyPaymentURL">
-              <fa-icon icon="copy"/> Click to copy
+              <fa-icon icon="copy"/> {{ t("contribute_pay_copy") }}
             </button>
           </div>
         </div>
@@ -97,6 +101,7 @@ import { PersistentState, Period, Settings, UsedPayable } from '../lib/State';
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { Currency } from "../lib/Currency";
 import { TxOut, PaymentService, BitboxPaymentService } from '../lib/Payment';
+import { I18n } from '../lib/I18n';
 import * as QRCode from "qrcode";
 
 function flatten<T>(aa: T[][]): T[] {
@@ -127,6 +132,10 @@ export default {
     }
   },
   mounted() {
+    // set page title
+    document.title = I18n.translate("contribute_title", [I18n.translate("manifest_short_name")]);
+
+    // get rate
     const state: PersistentState = this.state;
     BitboxPaymentService.getRate(state.settings.currency, (rate) => {
       state.settings.rate = rate / 100;
@@ -293,6 +302,9 @@ export default {
     save() {
       let state: PersistentState = this.state;
       state.save()
+    },
+    t(key: string) {
+      return I18n.translate(key);
     }
   },
   computed: {

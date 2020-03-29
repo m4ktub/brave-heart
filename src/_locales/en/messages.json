@@ -27,15 +27,15 @@
     "message": "Settings",
     "description": "Tooltip for the button taking the user to the settings page"
   },
-  "popup_toggle_automatic": {
+  "action_toggle_automatic": {
     "message": "Switch to automatic contribution",
     "description": "Tooltip for the button that toggles manual state when the entry is manual"
   },
-  "popup_toggle_manual": {
+  "action_toggle_manual": {
     "message": "Switch to manual contribution",
     "description": "Tooltip for the button that toggles manual state when the entry is automatic"
   },
-  "popup_ban": {
+  "action_ban": {
     "message": "Exclude",
     "description": "Tooltip for the button that removes the entry from the list permanently"
   },
@@ -148,5 +148,59 @@
   "options_restore": {
     "message": "Restore",
     "description": "Text for for the restore button"
+  },
+  "contribute_title": {
+    "message": "Contribute - $extension_name$",
+    "description": "Title of the contribution page, which includes the extension name",
+    "placeholders": {
+      "extension_name": {
+        "content": "$1",
+        "example": "Brave Heart"
+      }
+    }
+  },
+  "contribute_header_normal": {
+    "message": "Contribute",
+    "description": "Title for the contribution page header before payment is made"
+  },
+  "contribute_header_paid": {
+    "message": "Contributed",
+    "description": "Title for the contribution page header after the payment is made"
+  },
+  "contribute_title_view_tx": {
+    "message": "view transaction",
+    "description": "Text for the link taking the user to the blochain explorer to see the transaction details"
+  },
+  "contribute_amount_label": {
+    "message": "Amount",
+    "description": "Text for the label next to the standard amount the user can chose for the contribution"
+  },
+  "contribute_pay": {
+    "message": "Pay",
+    "description": "Text for the button that allows the user to initiate the contribution payment"
+  },
+  "contribute_empty": {
+    "message": "No Bitcoin Cash supporting sites have been visited in the active period.",
+    "description": "Message show to user when there are no entries to contribute to"
+  },
+  "contribute_pay_title": {
+    "message": "Payment",
+    "description": "Title of the payment popup with the QR code"
+  },
+  "contribute_pay_text": {
+    "message": "To start payment please scan the QR Code with a wallet. You can also use one of the buttons below to use a local application.",
+    "description": "Descriptive text for the payment popup with instructoins for the user"
+  },
+  "contribute_pay_received": {
+    "message": "Received!",
+    "description": "Message shown to user when the transaction is received"
+  },
+  "contribute_pay_copy": {
+    "message": "Click to copy",
+    "description": "Text for the copy button next to the payment QR code"
+  },
+  "contribute_pay_copy_message": {
+    "message": "Copied",
+    "description": "Text shown when the user clicks in copy that acts as confirmation of the action"
   }
 }

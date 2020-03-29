@@ -34,11 +34,11 @@
       <template v-slot:actions="{ producer }">
           <a v-on:click="toggleManual(producer)"
              v-bind:class="{ button: true, action: true, active: producer.manual }"
-             v-bind:title="producer.manual ? t('popup_toggle_automatic') : t('popup_toggle_manual')"
+             v-bind:title="producer.manual ? t('action_toggle_automatic') : t('action_toggle_manual')"
              >
             <fa-icon icon="pencil-alt"/>
           </a>
-          <a v-on:click="excludeProducer(producer)" class="button action" v-bind:title="t('popup_ban')">
+          <a v-on:click="excludeProducer(producer)" class="button action" v-bind:title="t('action_ban')">
             <fa-icon icon="ban"/>
           </a>
       </template>
