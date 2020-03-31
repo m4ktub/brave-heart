@@ -7,6 +7,11 @@ Version 0.6.0
   * Added i18n to browser extension
   * Added pt translation
 
+Version 0.5.1
+-------------
+
+  * Don't show actions, for each entry, in past periods
+
 Version 0.5.0
 -------------
 
