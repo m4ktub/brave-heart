@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.5.1
+-------------
+
+  * Don't show actions, for each entry, in past periods
+
 Version 0.5.0
 -------------
 

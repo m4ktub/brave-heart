@@ -32,10 +32,10 @@
         </span>
       </template>
       <template v-slot:actions="{ producer }">
-          <a v-on:click="toggleManual(producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+          <a v-if="!isPeriodPaid" v-on:click="toggleManual(producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
             <fa-icon icon="pencil-alt"/>
           </a>
-          <a v-on:click="excludeProducer(producer)" class="button action">
+          <a v-if="!isPeriodPaid" v-on:click="excludeProducer(producer)" class="button action">
             <fa-icon icon="ban"/>
           </a>
       </template>
