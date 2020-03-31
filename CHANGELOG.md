@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.6.1
+-------------
+
+ * Fixed pt locale to be recognized in chrome store
+
 Version 0.6.0
 -------------
 
