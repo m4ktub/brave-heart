@@ -5,6 +5,7 @@ Version 0.6.1
 -------------
 
  * Fixed pt locale to be recognized in chrome store
+ * Added pt_BR variant to locales (copied from pt_PT)
 
 Version 0.6.0
 -------------
