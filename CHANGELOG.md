@@ -6,6 +6,7 @@ Version 0.6.0
 
   * Added i18n to browser extension
   * Added pt translation
+  * Added es translation
 
 Version 0.5.1
 -------------

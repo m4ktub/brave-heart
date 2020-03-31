@@ -1,0 +1,206 @@
+{
+  "manifest_name": {
+    "message": "Brave Heart",
+    "description": "The extension's name"
+  },
+  "manifest_short_name": {
+    "message": "Brave Heart",
+    "description": "The extension's short name"
+  },
+  "manifest_description": {
+    "message": "Recompensa los autores en la web directamente com Bitcoin Cash y sin necesitar de confiar en intermediarios",
+    "description": "The extension's description"
+  },
+  "manifest_default_title": {
+    "message": "Brave Heart",
+    "description": "The default title of the extension's button in the toolbar"
+  },
+  "popup_period_back": {
+    "message": "Período anterior",
+    "description": "Tooltip for the button taking the user to the previous period"
+  },
+  "popup_period_forward": {
+    "message": "Período siguiente",
+    "description": "Tooltip for the button taking the user to the next period"
+  },
+  "popup_settings": {
+    "message": "Configuraciones",
+    "description": "Tooltip for the button taking the user to the settings page"
+  },
+  "action_toggle_automatic": {
+    "message": "Cambiar a contribución automática",
+    "description": "Tooltip for the button that toggles manual state when the entry is manual"
+  },
+  "action_toggle_manual": {
+    "message": "Cambiar a contribución manual",
+    "description": "Tooltip for the button that toggles manual state when the entry is automatic"
+  },
+  "action_ban": {
+    "message": "Excluir",
+    "description": "Tooltip for the button that removes the entry from the list permanently"
+  },
+  "popup_contribute": {
+    "message": "Contribuir",
+    "description": "Text for the popup button that takes the user to the contribution page"
+  },
+  "date_from_to": {
+    "message": "De $from$ a $to$",
+    "description": "Presents the date range of a period in a user readable way",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "March 26, 2020"
+      },
+      "to": {
+        "content": "$2",
+        "example": "March 26, 2020"
+      }
+    }
+  },
+  "date_since": {
+    "message": "Desde el $from$",
+    "description": "Presents the start of a period in a user readable way",
+    "placeholders": {
+      "from": {
+        "content": "$1",
+        "example": "March 26, 2020"
+      }
+    }
+  },
+  "currency_usd": {
+    "message": "Dólar estadounidense",
+    "description": "Name for the USD currency"
+  },
+  "currency_eur": {
+    "message": "Euro",
+    "description": "Name for the EUR currency"
+  },
+  "currency_aud": {
+    "message": "Dólar australiano",
+    "description": "Name for the AUD currency"
+  },
+  "currency_brl": {
+    "message": "Real",
+    "description": "Name for the BRL currency"
+  },
+  "currency_cad": {
+    "message": "Dólar canadiense",
+    "description": "Name for the CAD currency"
+  },
+  "currency_cny": {
+    "message": "Renminbi",
+    "description": "Name for the CNY currency"
+  },
+  "currency_gbp": {
+    "message": "Libra esterlina",
+    "description": "Name for the GBP currency"
+  },
+  "currency_inr": {
+    "message": "Rupia",
+    "description": "Name for the INR currency"
+  },
+  "currency_jpy": {
+    "message": "Yen",
+    "description": "Name for the JPY currency"
+  },
+  "currency_krw": {
+    "message": "Won surcoreano",
+    "description": "Name for the KRW currency"
+  },
+  "currency_thb": {
+    "message": "Baht",
+    "description": "Name for the THB currency"
+  },
+  "currency_rub": {
+    "message": "Rublo",
+    "description": "Name for the RUB currency"
+  },
+  "options_title": {
+    "message": "Configuraciones - $extension_name$",
+    "description": "Title of the options page, which includes the extension name",
+    "placeholders": {
+      "extension_name": {
+        "content": "$1",
+        "example": "Brave Heart"
+      }
+    }
+  },
+  "options_header": {
+    "message": "Configuraciones de la Extensión Brave Heart",
+    "description": "Header text in the options page"
+  },
+  "options_contribute_section": {
+    "message": "Contribuir",
+    "description": "Header of the contribute section"
+  },
+  "options_currency_label": {
+    "message": "Moneda:",
+    "description": "Field label for selecting the currency"
+  },
+  "options_exclusions_section": {
+    "message": "Exclusiones",
+    "description": "Header of the exclusions section"
+  },
+  "options_exclusions_description": {
+    "message": "Lista de direcciones web que han sido exlcluidas y no son más presentadsa como parte de los sitios visitados durante el período. Recuperar la dirección web hará con que el sitio sea de nuevo presenado en las listas con su utilización actualizada.",
+    "description": "Description of the exclusions section with explanation that it shows addresses excluded from the popup and that those can be restored"
+  },
+  "options_restore": {
+    "message": "Recuperar",
+    "description": "Text for for the restore button"
+  },
+  "contribute_title": {
+    "message": "Contribuir - $extension_name$",
+    "description": "Title of the contribution page, which includes the extension name",
+    "placeholders": {
+      "extension_name": {
+        "content": "$1",
+        "example": "Brave Heart"
+      }
+    }
+  },
+  "contribute_header_normal": {
+    "message": "Contribuir",
+    "description": "Title for the contribution page header before payment is made"
+  },
+  "contribute_header_paid": {
+    "message": "Contribuido",
+    "description": "Title for the contribution page header after the payment is made"
+  },
+  "contribute_title_view_tx": {
+    "message": "visualizar transacción",
+    "description": "Text for the link taking the user to the blochain explorer to see the transaction details"
+  },
+  "contribute_amount_label": {
+    "message": "Importe",
+    "description": "Text for the label next to the standard amount the user can chose for the contribution"
+  },
+  "contribute_pay": {
+    "message": "Pagar",
+    "description": "Text for the button that allows the user to initiate the contribution payment"
+  },
+  "contribute_empty": {
+    "message": "Ninguno sitio que soporte Bitcoin Cash ha sido visitado in el período activo.",
+    "description": "Message show to user when there are no entries to contribute to"
+  },
+  "contribute_pay_title": {
+    "message": "Pago",
+    "description": "Title of the payment popup with the QR code"
+  },
+  "contribute_pay_text": {
+    "message": "Para iniciar el pago por favor escanee el código QR con una cartera. También puedes clicar en uno de los botones abajo para utilizar una aplicación local.",
+    "description": "Descriptive text for the payment popup with instructoins for the user"
+  },
+  "contribute_pay_received": {
+    "message": "Recibido!",
+    "description": "Message shown to user when the transaction is received"
+  },
+  "contribute_pay_copy": {
+    "message": "Clicar para copiar",
+    "description": "Text for the copy button next to the payment QR code"
+  },
+  "contribute_pay_copy_message": {
+    "message": "Copiado",
+    "description": "Text shown when the user clicks in copy that acts as confirmation of the action"
+  }
+}
