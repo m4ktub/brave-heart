@@ -2,12 +2,12 @@
   <div class="popup">
     <div class="header">
       <div class="nav back">
-        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod" class="button">
+        <a v-on:click="prevPeriod" v-if="hasPreviousPeriod" class="button" v-bind:title="t('popup_period_back')">
           <fa-icon icon="chevron-left"/>
         </a>
       </div>
       <div class="nav forward">
-        <a v-on:click="nextPeriod" v-if="hasNextPeriod" class="button">
+        <a v-on:click="nextPeriod" v-if="hasNextPeriod" class="button" v-bind:title="t('popup_period_forward')">
           <fa-icon icon="chevron-right"/>
         </a>
       </div>
@@ -17,7 +17,7 @@
           ({{ visibleUsage.seconds | asDuration }})</span>
       </div>
       <div class="nav settings">
-        <a v-on:click="openOptions" class="button">
+        <a v-on:click="openOptions" class="button" v-bind:title="t('popup_settings')">
           <fa-icon icon="sliders-h"/>
         </a>
       </div>
@@ -32,10 +32,13 @@
         </span>
       </template>
       <template v-slot:actions="{ producer }">
-          <a v-if="!isPeriodPaid" v-on:click="toggleManual(producer)" v-bind:class="{ button: true, action: true, active: producer.manual }">
+          <a v-if="!isPeriodPaid" v-on:click="toggleManual(producer)"
+             v-bind:class="{ button: true, action: true, active: producer.manual }"
+             v-bind:title="producer.manual ? t('action_toggle_automatic') : t('action_toggle_manual')"
+             >
             <fa-icon icon="pencil-alt"/>
           </a>
-          <a v-if="!isPeriodPaid" v-on:click="excludeProducer(producer)" class="button action">
+          <a v-if="!isPeriodPaid" v-on:click="excludeProducer(producer)" class="button action" v-bind:title="t('action_ban')">
             <fa-icon icon="ban"/>
           </a>
       </template>
@@ -43,7 +46,7 @@
     <div class="contribute">
         <button v-on:click="openContribute" v-bind:disabled="isPeriodPaid">
           <fa-icon icon="hand-holding-usd"/>
-          Contribute
+          {{ t("popup_contribute") }}
         </button>
     </div>
   </div>
@@ -55,8 +58,9 @@ import { Account } from "../lib/Payable";
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
 import { Currency } from "../lib/Currency";
+import { I18n } from '../lib/I18n';
 
-const formatter = new TimeFormatter();
+const formatter = new TimeFormatter(I18n);
 
 export default {
   data() {
@@ -93,6 +97,9 @@ export default {
     asCurrency(value, settings: Settings ) {
       let state: PersistentState = this.state;
       return Currency.format(value, { currency: state.settings.currency });
+    },
+    t(key: string, ...substitutions: string[]) {
+      return I18n.translate(key, substitutions);
     }
   },
   computed: {
