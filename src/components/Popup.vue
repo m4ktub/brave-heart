@@ -16,6 +16,12 @@
           {{ [visiblePeriod.start, visiblePeriod.end] | asDateRange }}
           ({{ visibleUsage.seconds | asDuration }})</span>
       </div>
+      <div class="nav help">
+        <a class="button" target="_blank" v-bind:title="t('popup_help')" 
+           v-bind:href="'https://m4ktub.ws/brave-heart/' + i18nLang">
+          <fa-icon v-bind:icon="['far', 'question-circle']"/>
+        </a>
+      </div>
       <div class="nav settings">
         <a v-on:click="openOptions" class="button" v-bind:title="t('popup_settings')">
           <fa-icon icon="sliders-h"/>
@@ -127,6 +133,15 @@ export default {
     },
     totalTimeString() {
       return formatter.duration(this.visibleUsage.seconds);
+    },
+    i18nLang() {
+      const main = I18n.language.replace(/-.*/, "");
+      switch (main) {
+        case "en":
+          return main + "/";
+        default:
+          return "";
+      }
     }
   },
   filters: {

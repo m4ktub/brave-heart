@@ -23,6 +23,10 @@
     "message": "Próximo período",
     "description": "Tooltip for the button taking the user to the next period"
   },
+  "popup_help": {
+    "message": "Ajuda",
+    "description": "Tooltip for the button taking the user to an help page"
+  },
   "popup_settings": {
     "message": "Configurações",
     "description": "Tooltip for the button taking the user to the settings page"

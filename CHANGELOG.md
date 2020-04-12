@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.6.2
+-------------
+
+ * Added help button to popup
+
 Version 0.6.1
 -------------
 

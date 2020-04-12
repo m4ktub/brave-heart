@@ -23,6 +23,10 @@
     "message": "Next period",
     "description": "Tooltip for the button taking the user to the next period"
   },
+  "popup_help": {
+    "message": "Help",
+    "description": "Tooltip for the button taking the user to an help page"
+  },
   "popup_settings": {
     "message": "Settings",
     "description": "Tooltip for the button taking the user to the settings page"

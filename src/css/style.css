@@ -20,7 +20,7 @@ html, body {
 
 .header .title {
   display: inline-block;
-  width: 310px;
+  width: 280px;
   height: 30px;
   white-space: nowrap;
   overflow: hidden;
@@ -43,6 +43,10 @@ html, body {
 .nav .button:hover {
   cursor: pointer;
   background-color: rgba(10, 193, 141, 0.5);
+}
+
+.nav a:visited {
+  color: black;
 }
 
 .usage .line {

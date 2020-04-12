@@ -15,6 +15,7 @@ library.add(fas.faChevronRight);
 library.add(fas.faSlidersH);
 library.add(fas.faHandHoldingUsd);
 library.add(fas.faPencilAlt);
+library.add(far.faQuestionCircle);
 
 // globally register components
 import Vue from "vue";
