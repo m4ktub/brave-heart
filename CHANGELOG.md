@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 0.6.3
+-------------
+
+ * Fixed problems with production builds that would prevent payments
+
 Version 0.6.2
 -------------
 
