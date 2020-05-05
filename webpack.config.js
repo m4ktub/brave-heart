@@ -8,8 +8,9 @@ const path = require('path');
 const ExtensionReloader  = require('webpack-extension-reloader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = {
+var config = {
   context: path.resolve(__dirname, 'src'),
   devtool: false,
   entry: {
@@ -54,11 +55,19 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          mangle: {
+            reserved: ['BigInteger','ECPair','Point']
+          }
+        }
+      }),
+    ],
+  },
   plugins: [
     new VueLoaderPlugin(),
-    new ExtensionReloader({
-      manifest: path.resolve(__dirname, "src/manifest.json")
-    }),
     new CopyWebpackPlugin([
       { from: 'manifest.json', transform: updateVersion },
       { from: 'pages/**/*.html' },
@@ -76,3 +85,21 @@ function updateVersion(input) {
 
   return JSON.stringify(data, null, 2);
 }
+
+module.exports = (env, argv) => {
+  switch (argv.mode) {
+    case 'development':
+      // allow extension to automatically reload
+      config.plugins.push(new ExtensionReloader({
+        manifest: path.resolve(__dirname, "src/manifest.json")
+      }));
+      break;
+    case 'production':
+      break;
+    default:
+      throw new Error("Unexpected mode: " + argv.mode)
+  }
+
+  // return the actual configuration
+  return config;
+};
