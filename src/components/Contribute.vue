@@ -129,7 +129,7 @@ export default {
       paymentURLCopied: false,
       paymentDataURL: "",
       paymentTxId: null
-    }
+    };
   },
   mounted() {
     // set page title
