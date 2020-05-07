@@ -9,6 +9,7 @@ const ExtensionReloader  = require('webpack-extension-reloader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 var config = {
   context: path.resolve(__dirname, 'src'),
@@ -95,6 +96,8 @@ module.exports = (env, argv) => {
       }));
       break;
     case 'production':
+      // add clean plugin to ensure a clean dist build
+      config.plugins.push(new CleanWebpackPlugin());
       break;
     default:
       throw new Error("Unexpected mode: " + argv.mode)
