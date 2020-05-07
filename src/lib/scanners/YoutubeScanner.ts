@@ -8,7 +8,11 @@ import { WebsiteScanner } from "./WebsiteScanner";
  */
 export class YoutubeScanner extends WebsiteScanner implements Scanner {
 
-  private static channelRegExp = new RegExp("https?://.*\\.youtube\\.com/channel/(.*)$");
+    private static channelRegExp = new RegExp("https?://.*\\.youtube\\.com/channel/(.*)$");
+    private static queryWatchPage = "ytd-app[is-watch-page]";
+    private static queryDescription = "ytd-video-secondary-info-renderer #description";
+    private static queryChannelLink = "ytd-video-secondary-info-renderer ytd-channel-name a.yt-simple-endpoint";
+    private static queryViewer = "ytd-watch-flexy";
 
     accepts(document: HTMLDocument): boolean {
         const hosts = ["www.youtube.com"];
@@ -24,12 +28,12 @@ export class YoutubeScanner extends WebsiteScanner implements Scanner {
     }
 
     protected scanAddressText(document: HTMLDocument): string {
-        const isWatchPage = null != document.querySelector("ytd-app[is-watch-page]");
+        const isWatchPage = null != document.querySelector(YoutubeScanner.queryWatchPage);
         if (!isWatchPage) {
             return "";
         }
 
-        let description = document.querySelector<HTMLElement>("div#description");
+        let description = document.querySelector<HTMLElement>(YoutubeScanner.queryDescription);
         if (!description) {
             return "";
         }
@@ -38,7 +42,7 @@ export class YoutubeScanner extends WebsiteScanner implements Scanner {
     }
 
     protected scanAccount(document: HTMLDocument): Account | null {
-        let accountLink = document.querySelector<HTMLElement>("ytd-channel-name a.yt-simple-endpoint");
+        let accountLink = document.querySelector<HTMLElement>(YoutubeScanner.queryChannelLink);
         if (!accountLink) {
             return null;
         }
@@ -55,7 +59,7 @@ export class YoutubeScanner extends WebsiteScanner implements Scanner {
     }
 
     protected scanContentId(document: HTMLDocument): string {
-        let flexy = document.querySelector<HTMLElement>("ytd-watch-flexy");
+        let flexy = document.querySelector<HTMLElement>(YoutubeScanner.queryViewer);
         return flexy.getAttribute("video-id");
     }
 

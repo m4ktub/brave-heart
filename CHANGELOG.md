@@ -5,6 +5,7 @@ Version 0.6.3
 -------------
 
  * Fixed problems with production builds that would prevent payments
+ * Youtube - Correctly capture channel after clicking recommended videos
 
 Version 0.6.2
 -------------
