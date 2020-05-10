@@ -62,17 +62,13 @@ export interface Settings {
     excludedUrls: string[];
 }
 
-interface StorageChanges {
-    [key: string]: chrome.storage.StorageChange;
-}
-
-export class PersistentState {
+export class State {
     currentPeriod: Period;
     settings: Settings;
     previousPeriods: Period[];
     seed: string;
 
-    constructor(initializer?: (loaded: PersistentState) => void) {
+    constructor() {
         this.currentPeriod = new Period();
         this.previousPeriods = [];
         this.seed = null;
@@ -82,31 +78,9 @@ export class PersistentState {
             rate: 1.0,
             excludedUrls: []
         };
-
-        this.load(initializer);
     }
 
-    protected load(initializer?: (loaded: PersistentState) => void) {
-        // get stored state
-        chrome.storage.local.get((items: { [key: string]: any }) => {
-            // initialize state from stored json
-            if (items.state) {
-                this.updateFrom(items.state);
-            }
-
-            // invoke provided initializer
-            if (initializer) {
-                initializer(this);
-            }
-
-            // monitor changes to update previously loaded state
-            chrome.storage.onChanged.addListener((changes: StorageChanges, areaName: string) => {
-                this.updateFrom(changes.state.newValue);
-            });
-        });
-    }
-
-    protected updateFrom(json: any) {
+    public updateFrom(json: any) {
         Object.assign(this, json);
         Object.setPrototypeOf(this.currentPeriod, Period.prototype);
         Object.keys(this.currentPeriod.usage).map(k => this.currentPeriod.usage[k]).forEach(tc => {
@@ -129,7 +103,4 @@ export class PersistentState {
         return this.currentPeriod;
     }
 
-    save(callback?: () => void) {
-        chrome.storage.local.set({ state: this }, callback);
-    }
 }

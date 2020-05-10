@@ -35,8 +35,10 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Settings } from "../lib/State";
+import { State, Settings } from "../lib/State";
 import { I18n } from '../lib/I18n';
+import { StateRequestMessage, Message, MessageType, StateUpdateMessage, Dispatcher } from '../lib/Messages';
+import Browser from '../lib/Browser';
 
 const currencyOptions = [
   { code: "USD", label: I18n.translate("currency_usd") },
@@ -53,10 +55,25 @@ const currencyOptions = [
   { code: "RUB", label: I18n.translate("currency_rub") },
 ];
 
+// global state
+var state = new State();
+
+// handle state updates
+const dispatcher = new Dispatcher();
+chrome.runtime.onMessage.addListener(dispatcher.listener());
+
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+  state.updateFrom(msg.state);
+});
+
+// request state update
+Browser.sendMessage(new StateRequestMessage());
+
+// vue component
 export default {
   data() {
     return {
-      state: new PersistentState(),
+      state,
       currencyOptions
     };
   },
@@ -65,14 +82,14 @@ export default {
   },
   methods: {
     save() {
-      let state: PersistentState = this.state;
-      state.save();
+      let state: State = this.state;
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     removeFromExcludedUrls(url) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let pos = state.settings.excludedUrls.indexOf(url);
       state.settings.excludedUrls.splice(pos, 1);
-      state.save();
+      this.save();
     },
     t(key: string) {
       return I18n.translate(key);
@@ -80,7 +97,7 @@ export default {
   },
   computed: {
     sortedExcludedUrls() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return Array.from(state.settings.excludedUrls).sort();
     }
   }

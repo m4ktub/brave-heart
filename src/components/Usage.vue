@@ -5,7 +5,7 @@
       v-bind:class="{ manual: producer.manual }">
       <div class="left">
         <div class="icon">
-          <img :src="'chrome://favicon/size/32/' + producer.site" />
+          <img v-bind:src="getFaviconUrl(producer.site)" />
         </div>     
       </div>
       <div class="right">
@@ -33,23 +33,28 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
+import { State, Period, UsageMap, Settings } from "../lib/State";
 import { UiUsage } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
 import { I18n } from '../lib/I18n';
+import Browser from '../lib/Browser';
 
 const formatter = new TimeFormatter(I18n);
 
 export default {
-  props: [ "period", "show" ],
+  props: [ "state", "period", "show" ],
   data() {
     return {
-      state: new PersistentState()
     };
+  },
+  methods: {
+    getFaviconUrl(url: string) {
+      return Browser.getFaviconUrl(url);
+    }
   },
   computed: {
     visibleUsage() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let period: Period = this.period;
       let showManual: boolean = this.showManual;
       return new UiUsage(period.usage, state.settings);

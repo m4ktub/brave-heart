@@ -28,7 +28,7 @@
         </a>
       </div>
     </div>
-    <usage v-bind:period="visiblePeriod">
+    <usage v-bind:state="state" v-bind:period="visiblePeriod">
       <template v-slot:details="{ producer }">
         <span v-if="producer.manual && !isPeriodPaid">
           | <fa-icon icon="pencil-alt"/>
@@ -59,34 +59,52 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
+import { State, Period, UsageMap, Settings } from "../lib/State";
 import { Account } from "../lib/Payable";
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
 import { Currency } from "../lib/Currency";
 import { I18n } from '../lib/I18n';
+import { StateRequestMessage, Message, StateUpdateMessage, MessageType, Dispatcher } from '../lib/Messages';
+import Browser from '../lib/Browser';
 
+// global state
+var state = new State();
+
+// handle state updates
+const dispatcher = new Dispatcher();
+chrome.runtime.onMessage.addListener(dispatcher.listener());
+
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+  state.updateFrom(msg.state);
+});
+
+// request state update
+Browser.sendMessage(new StateRequestMessage());
+
+// initialize time formatter
 const formatter = new TimeFormatter(I18n);
 
+// vue component
 export default {
   data() {
     return {
-      state: new PersistentState(),
+      state,
       index: 0
     }
   },
   methods: {
     excludeProducer(producer: UiProducer) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
-      state.save();
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     toggleManual(producer: UiProducer) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       producer.contents.forEach(c => c.manual = !c.manual);
-      state.save();
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     openOptions() {
       chrome.runtime.openOptionsPage();
@@ -101,7 +119,7 @@ export default {
       this.index--;
     },
     asCurrency(value, settings: Settings ) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return Currency.format(value, { currency: state.settings.currency });
     },
     t(key: string, ...substitutions: string[]) {
@@ -113,17 +131,17 @@ export default {
       return this.index > 0;
     },
     hasPreviousPeriod() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return this.index < state.previousPeriods.length;
     },
     visiblePeriod() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return this.index == 0
         ? state.currentPeriod
         : state.previousPeriods[state.previousPeriods.length - this.index];
     },
     visibleUsage() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let period: Period = this.visiblePeriod;
       return new UiUsage(period.usage, state.settings);
     },

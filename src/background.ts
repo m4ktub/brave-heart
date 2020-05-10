@@ -1,17 +1,43 @@
 import {
+    Dispatcher,
+    FetchJsonMessage,
     MessageType,
-    Message,
     PayableFoundMessage,
     PayableRescanMessage,
-    FetchJsonMessage,
+    StateUpdateMessage
 } from "./lib/Messages";
 import { Payable } from "./lib/Payable";
-import { PersistentState } from "./lib/State";
+import { State } from "./lib/State";
+import Browser from "./lib/Browser";
 
 /**
- * Persistent state with usage during current period and user options.
+ * State structure with accumlated usage user options.
  */
-var state = new PersistentState();
+var state = new State();
+
+/**
+ * Updates the extension's state from a received update.
+ *
+ * @param items The new state possibly as a plain object
+ */
+function updateState(items: any) {
+    // skip when empty (first load)
+    if (!items || !items.state) {
+        return;
+    }
+
+    // initialize state from stored json
+    state.updateFrom(items.state);
+}
+
+/**
+ * Saves the state to local storage and broadcasts a message with the new state.
+ */
+function saveState(update?: any) {
+    updateState({ state: update });
+    chrome.storage.local.set({ state });
+    Browser.sendMessage(new StateUpdateMessage(state));
+}
 
 /**
  * Internal tracking of the payable found in each tab.
@@ -34,7 +60,7 @@ function monitor() {
         }
 
         state.currentPeriod.trackUsage(payable, 1);
-        state.save();
+        saveState();
     }
 
     chrome.windows.getLastFocused((window: chrome.windows.Window) => {
@@ -66,31 +92,29 @@ function onPayableFound(tab: chrome.tabs.Tab, payable: Payable) {
 }
 
 /**
- * Dispatches each received message to the respective function, that is, to a function that only
- * handles that particular type of message. It also ensures that `sendResponse` is called with
- * `true` when the message is processed or `false` if the message is not processed.
+ * Setups the dispatcher from received message with a respective handler function, that is, to a function
+ * that only handles that particular type of message.
  */
-function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
-    let msg = message as Message;
-    switch (msg.type) {
-        case MessageType.PayableFound:
-            let payableMsg = msg as PayableFoundMessage;
-            onPayableFound(sender.tab, payableMsg.payable);
-            sendResponse(true);
-            break;
-        case MessageType.FetchJson:
-            const fetchMessage = msg as FetchJsonMessage;
-            fetch(fetchMessage.url, fetchMessage.options)
-                .then(response => response.json())
-                .then(data => sendResponse({ data }))
-                .catch(error => sendResponse({ error }));
-            break;
-        default:
-            console.log("Unrecognized message: " + message.id, message);
-            sendResponse(false);
-            break;
-    }
-}
+const dispatcher = new Dispatcher();
+
+dispatcher.register(MessageType.StateRequest, () => {
+    Browser.sendMessage(new StateUpdateMessage(state));
+});
+
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+    saveState(msg.state);
+});
+
+dispatcher.register(MessageType.PayableFound, (msg: PayableFoundMessage, sender) => {
+    onPayableFound(sender.tab, msg.payable);
+});
+
+dispatcher.register(MessageType.FetchJson, (msg: FetchJsonMessage, sender, sendResponse) => {
+    fetch(msg.url, msg.options)
+        .then(response => response.json())
+        .then(data => sendResponse({ data }))
+        .catch(error => sendResponse({ error }));
+});
 
 /**
  * After a tab completes loaded deletes any tracking for the tab and sends a rescan request to the content script.
@@ -101,15 +125,18 @@ function onTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab:
         delete tabs[tabId];
 
         // request scan of new payable
-        chrome.tabs.sendMessage(tabId, new PayableRescanMessage());
+        Browser.sendTabMessage(tabId, new PayableRescanMessage());
     }
 }
 
 // register message dispatcher
-chrome.runtime.onMessage.addListener(onRuntimeMessage);
+chrome.runtime.onMessage.addListener(dispatcher.listener());
 
 // monitor when tabs change url to rescan content
 chrome.tabs.onUpdated.addListener(onTabUpdated);
+
+// load stored state
+chrome.storage.local.get(updateState);
 
 // periodically monitoring usage
 setInterval(monitor, 1000);
