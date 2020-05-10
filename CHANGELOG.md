@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 1.0.0
+-------------
+
+ * Added support for Firefox
+
 Version 0.6.3
 -------------
 
