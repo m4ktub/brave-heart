@@ -45,7 +45,7 @@ html, body {
   background-color: rgba(10, 193, 141, 0.5);
 }
 
-.nav a:visited {
+.nav a {
   color: black;
 }
 
