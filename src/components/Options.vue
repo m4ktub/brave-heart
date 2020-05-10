@@ -37,7 +37,8 @@
 <script lang="ts">
 import { State, Settings } from "../lib/State";
 import { I18n } from '../lib/I18n';
-import { StateRequestMessage, Message, MessageType, StateUpdateMessage } from '../lib/Messages';
+import { StateRequestMessage, Message, MessageType, StateUpdateMessage, Dispatcher } from '../lib/Messages';
+import Browser from '../lib/Browser';
 
 const currencyOptions = [
   { code: "USD", label: I18n.translate("currency_usd") },
@@ -54,23 +55,21 @@ const currencyOptions = [
   { code: "RUB", label: I18n.translate("currency_rub") },
 ];
 
+// global state
 var state = new State();
 
-chrome.runtime.sendMessage(new StateRequestMessage());
-chrome.runtime.onMessage.addListener(onRuntimeMessage);
+// handle state updates
+const dispatcher = new Dispatcher();
+chrome.runtime.onMessage.addListener(dispatcher.listener());
 
-function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
-    let msg = message as Message;
-    switch (msg.type) {
-        case MessageType.StateUpdate:
-            let stateMsg = msg as StateUpdateMessage;
-            state.updateFrom(stateMsg.state);
-            break;
-        default:
-            break;
-    }
-}
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+  state.updateFrom(msg.state);
+});
 
+// request state update
+Browser.sendMessage(new StateRequestMessage());
+
+// vue component
 export default {
   data() {
     return {
@@ -84,7 +83,7 @@ export default {
   methods: {
     save() {
       let state: State = this.state;
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     removeFromExcludedUrls(url) {
       let state: State = this.state;

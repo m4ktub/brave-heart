@@ -65,27 +65,27 @@ import { UiUsage, UiProducer } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
 import { Currency } from "../lib/Currency";
 import { I18n } from '../lib/I18n';
-import { StateRequestMessage, Message, StateUpdateMessage, MessageType } from '../lib/Messages';
+import { StateRequestMessage, Message, StateUpdateMessage, MessageType, Dispatcher } from '../lib/Messages';
+import Browser from '../lib/Browser';
 
+// global state
 var state = new State();
 
-chrome.runtime.sendMessage(new StateRequestMessage());
-chrome.runtime.onMessage.addListener(onRuntimeMessage);
+// handle state updates
+const dispatcher = new Dispatcher();
+chrome.runtime.onMessage.addListener(dispatcher.listener());
 
-function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender) {
-    const msg = message as Message;
-    switch (msg.type) {
-        case MessageType.StateUpdate:
-            const stateMsg = msg as StateUpdateMessage;
-            state.updateFrom(stateMsg.state);
-            break;
-        default:
-            break;
-    }
-}
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+  state.updateFrom(msg.state);
+});
 
+// request state update
+Browser.sendMessage(new StateRequestMessage());
+
+// initialize time formatter
 const formatter = new TimeFormatter(I18n);
 
+// vue component
 export default {
   data() {
     return {
@@ -99,12 +99,12 @@ export default {
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     toggleManual(producer: UiProducer) {
       let state: State = this.state;
       producer.contents.forEach(c => c.manual = !c.manual);
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     openOptions() {
       chrome.runtime.openOptionsPage();

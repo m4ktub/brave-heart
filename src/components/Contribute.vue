@@ -103,48 +103,49 @@ import { Currency } from "../lib/Currency";
 import { TxOut, PaymentService, BitboxPaymentService } from '../lib/Payment';
 import { I18n } from '../lib/I18n';
 import * as QRCode from "qrcode";
-import { StateRequestMessage, MessageType, StateUpdateMessage, Message } from '../lib/Messages';
+import { StateRequestMessage, MessageType, StateUpdateMessage, Message, Dispatcher } from '../lib/Messages';
+import Browser from '../lib/Browser';
 
+// global state
 var state = new State();
 
-chrome.runtime.sendMessage(new StateRequestMessage());
-chrome.runtime.onMessage.addListener(onRuntimeMessage);
+// handle state updates
+const dispatcher = new Dispatcher();
+chrome.runtime.onMessage.addListener(dispatcher.listener());
 
-function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
-    let msg = message as Message;
-    switch (msg.type) {
-        case MessageType.StateUpdate:
-            let stateMsg = msg as StateUpdateMessage;
-            state.updateFrom(stateMsg.state);
+dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
+  state.updateFrom(msg.state);
 
-            if (!state.seed) {
-              state.seed = BitboxPaymentService.generateSeed();
-              chrome.runtime.sendMessage(new StateUpdateMessage(state));
-            }
-            break;
-    }
-}
+  // ensure seed is generated
+  if (!state.seed) {
+    state.seed = BitboxPaymentService.generateSeed();
+    Browser.sendMessage(new StateUpdateMessage(state));
+  }
+});
 
+// request state update
+Browser.sendMessage(new StateRequestMessage());
+
+// fiat rate update
 function getRate() {
   if (Object.keys(state.currentPeriod.usage).length) {
-    console.log("getting rate... abort")
     setTimeout(getRate, 1000);
   }
 
-  console.log("getting rate... proceed")
   BitboxPaymentService.getRate(state.settings.currency, (rate) => {
-    console.log("getting rate... done")
     state.settings.rate = rate / 100;
-    chrome.runtime.sendMessage(new StateUpdateMessage(state));
+    Browser.sendMessage(new StateUpdateMessage(state));
   });
 }
 
 getRate();
 
+// utilities
 function flatten<T>(aa: T[][]): T[] {
   return aa.reduce((acc, value) => acc.concat(value));
 }
 
+// vue component
 export default {
   data() {
     return {
@@ -269,7 +270,7 @@ export default {
         });
 
       // save state
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     producerValue(usage: UiUsage, producer: UiProducer): number {
       const manual = usage.manualTotals();
@@ -286,7 +287,7 @@ export default {
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     toggleManual(usage: UiUsage, producer: UiProducer) {
       let state: State = this.state;
@@ -301,7 +302,7 @@ export default {
         producer.manual = true;
       }
 
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     copyPaymentURL() {
       // get input element
@@ -323,7 +324,7 @@ export default {
     },
     save() {
       let state: State = this.state;
-      chrome.runtime.sendMessage(new StateUpdateMessage(state));
+      Browser.sendMessage(new StateUpdateMessage(state));
     },
     t(key: string) {
       return I18n.translate(key);

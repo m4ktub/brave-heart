@@ -51,3 +51,33 @@ export class StateUpdateMessage implements Message {
 
     }
 }
+
+type MessageResponse = (response?: any) => void;
+type MessageHandler = (msg: Message, sender?: chrome.runtime.MessageSender, sendResponse?: MessageResponse) => any;
+
+export class Dispatcher {
+
+    private map: { [key: string]: MessageHandler } = {};
+
+    constructor() {
+        // empty
+    }
+
+    register(type: MessageType, handler: MessageHandler) {
+        this.map[type] = handler;
+    }
+
+    listener() {
+        return (message: any, sender: chrome.runtime.MessageSender, sendResponse: MessageResponse) => {
+            let msg = message as Message;
+            let handler = this.map[msg.type];
+
+            if (!handler) {
+                sendResponse(false);
+            }
+
+            handler(msg, sender, sendResponse);
+        }
+    }
+
+}
