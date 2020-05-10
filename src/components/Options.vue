@@ -35,8 +35,9 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Settings } from "../lib/State";
+import { State, Settings } from "../lib/State";
 import { I18n } from '../lib/I18n';
+import { StateRequestMessage, Message, MessageType, StateUpdateMessage } from '../lib/Messages';
 
 const currencyOptions = [
   { code: "USD", label: I18n.translate("currency_usd") },
@@ -53,10 +54,27 @@ const currencyOptions = [
   { code: "RUB", label: I18n.translate("currency_rub") },
 ];
 
+var state = new State();
+
+chrome.runtime.sendMessage(new StateRequestMessage());
+chrome.runtime.onMessage.addListener(onRuntimeMessage);
+
+function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
+    let msg = message as Message;
+    switch (msg.type) {
+        case MessageType.StateUpdate:
+            let stateMsg = msg as StateUpdateMessage;
+            state.updateFrom(stateMsg.state);
+            break;
+        default:
+            break;
+    }
+}
+
 export default {
   data() {
     return {
-      state: new PersistentState(),
+      state,
       currencyOptions
     };
   },
@@ -65,14 +83,14 @@ export default {
   },
   methods: {
     save() {
-      let state: PersistentState = this.state;
-      state.save();
+      let state: State = this.state;
+      chrome.runtime.sendMessage(new StateUpdateMessage(state));
     },
     removeFromExcludedUrls(url) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let pos = state.settings.excludedUrls.indexOf(url);
       state.settings.excludedUrls.splice(pos, 1);
-      state.save();
+      this.save();
     },
     t(key: string) {
       return I18n.translate(key);
@@ -80,7 +98,7 @@ export default {
   },
   computed: {
     sortedExcludedUrls() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return Array.from(state.settings.excludedUrls).sort();
     }
   }

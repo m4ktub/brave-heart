@@ -25,7 +25,7 @@
           </button>
         </div>
       </form>
-      <usage ref="manualUsage" v-if="hasUsage" v-bind:period="paymentPeriod" show="manual">
+      <usage ref="manualUsage" v-if="hasUsage" v-bind:state="state" v-bind:period="paymentPeriod" show="manual">
         <template v-slot:details="{ producer }">
           | {{ currencyCode }}<input type="number" min="0.00" step="0.10" placeholder="0.00"
                                      v-model.number="producer.paid" 
@@ -43,7 +43,7 @@
           </a>
         </template>
       </usage>
-      <usage ref="autoUsage" v-if="hasUsage" v-bind:period="paymentPeriod" show="automatic">
+      <usage ref="autoUsage" v-if="hasUsage" v-bind:state="state" v-bind:period="paymentPeriod" show="automatic">
         <template v-slot:details="{ producer, usage }">
           | {{ asCurrency(producerValue(usage, producer)) }}
         </template>
@@ -97,12 +97,49 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Period, Settings, UsedPayable } from '../lib/State';
+import { State, Period, Settings, UsedPayable } from '../lib/State';
 import { UiUsage, UiProducer } from "../lib/Ui";
 import { Currency } from "../lib/Currency";
 import { TxOut, PaymentService, BitboxPaymentService } from '../lib/Payment';
 import { I18n } from '../lib/I18n';
 import * as QRCode from "qrcode";
+import { StateRequestMessage, MessageType, StateUpdateMessage, Message } from '../lib/Messages';
+
+var state = new State();
+
+chrome.runtime.sendMessage(new StateRequestMessage());
+chrome.runtime.onMessage.addListener(onRuntimeMessage);
+
+function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) {
+    let msg = message as Message;
+    switch (msg.type) {
+        case MessageType.StateUpdate:
+            let stateMsg = msg as StateUpdateMessage;
+            state.updateFrom(stateMsg.state);
+
+            if (!state.seed) {
+              state.seed = BitboxPaymentService.generateSeed();
+              chrome.runtime.sendMessage(new StateUpdateMessage(state));
+            }
+            break;
+    }
+}
+
+function getRate() {
+  if (Object.keys(state.currentPeriod.usage).length) {
+    console.log("getting rate... abort")
+    setTimeout(getRate, 1000);
+  }
+
+  console.log("getting rate... proceed")
+  BitboxPaymentService.getRate(state.settings.currency, (rate) => {
+    console.log("getting rate... done")
+    state.settings.rate = rate / 100;
+    chrome.runtime.sendMessage(new StateUpdateMessage(state));
+  });
+}
+
+getRate();
 
 function flatten<T>(aa: T[][]): T[] {
   return aa.reduce((acc, value) => acc.concat(value));
@@ -110,14 +147,6 @@ function flatten<T>(aa: T[][]): T[] {
 
 export default {
   data() {
-    // initialize persistent state ensuring that a seed is available
-    const state = new PersistentState(loaded => {
-      if (!loaded.seed) {
-        loaded.seed = BitboxPaymentService.generateSeed();
-        loaded.save();
-      }
-    });
-    
     return {
       state,
       service: null,
@@ -134,17 +163,10 @@ export default {
   mounted() {
     // set page title
     document.title = I18n.translate("contribute_title", [I18n.translate("manifest_short_name")]);
-
-    // get rate
-    const state: PersistentState = this.state;
-    BitboxPaymentService.getRate(state.settings.currency, (rate) => {
-      state.settings.rate = rate / 100;
-      state.save();
-    });
   },
   methods: {
     startPayment() {
-      const state: PersistentState = this.state;
+      const state: State = this.state;
 
       // start payment process
       this.paying = true;
@@ -223,7 +245,7 @@ export default {
       });
     },
     completePayment() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
 
       // save period to lock ui (see `.paymentPeriod´)
       this.period = state.currentPeriod;
@@ -247,7 +269,7 @@ export default {
         });
 
       // save state
-      state.save();
+      chrome.runtime.sendMessage(new StateUpdateMessage(state));
     },
     producerValue(usage: UiUsage, producer: UiProducer): number {
       const manual = usage.manualTotals();
@@ -255,19 +277,19 @@ export default {
       return Currency.proportion(value, producer.seconds, usage.seconds - manual.seconds);
     },
     asCurrency(value: number, code?: string) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let currency = code ? code : state.settings.currency;
       return Currency.format(value, { currency });
     },
     excludeProducer(producer: UiProducer) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       if (state.settings.excludedUrls.indexOf(producer.url) < 0) {
         state.settings.excludedUrls.push(producer.url);
       }
-      state.save();
+      chrome.runtime.sendMessage(new StateUpdateMessage(state));
     },
     toggleManual(usage: UiUsage, producer: UiProducer) {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       
       if (producer.manual) {
         // make automatic, reset paid valie
@@ -279,7 +301,7 @@ export default {
         producer.manual = true;
       }
 
-      state.save();
+      chrome.runtime.sendMessage(new StateUpdateMessage(state));
     },
     copyPaymentURL() {
       // get input element
@@ -300,8 +322,8 @@ export default {
       setTimeout(() => this.paymentURLCopied = false, 5 * 1000);
     },
     save() {
-      let state: PersistentState = this.state;
-      state.save()
+      let state: State = this.state;
+      chrome.runtime.sendMessage(new StateUpdateMessage(state));
     },
     t(key: string) {
       return I18n.translate(key);
@@ -309,7 +331,7 @@ export default {
   },
   computed: {
     paymentPeriod() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return this.period || state.currentPeriod;
     },
     paymentUsage() {
@@ -321,7 +343,7 @@ export default {
       return Object.keys(period.usage).length > 0;
     },
     currencyCode() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       return Currency.code(state.settings.currency);
     },
     finalPayment() {

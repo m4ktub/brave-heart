@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { PersistentState, Period, UsageMap, Settings } from "../lib/State";
+import { State, Period, UsageMap, Settings } from "../lib/State";
 import { UiUsage } from "../lib/Ui";
 import { TimeFormatter } from "../lib/Time";
 import { I18n } from '../lib/I18n';
@@ -41,15 +41,14 @@ import { I18n } from '../lib/I18n';
 const formatter = new TimeFormatter(I18n);
 
 export default {
-  props: [ "period", "show" ],
+  props: [ "state", "period", "show" ],
   data() {
     return {
-      state: new PersistentState()
     };
   },
   computed: {
     visibleUsage() {
-      let state: PersistentState = this.state;
+      let state: State = this.state;
       let period: Period = this.period;
       let showManual: boolean = this.showManual;
       return new UiUsage(period.usage, state.settings);

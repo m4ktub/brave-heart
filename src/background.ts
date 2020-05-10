@@ -6,12 +6,33 @@ import {
     FetchJsonMessage,
 } from "./lib/Messages";
 import { Payable } from "./lib/Payable";
-import { PersistentState } from "./lib/State";
+import { State } from "./lib/State";
+import { StateUpdateMessage } from './lib/Messages';
 
 /**
  * Persistent state with usage during current period and user options.
  */
-var state = new PersistentState();
+var state = new State();
+
+// load stored state
+chrome.storage.local.get((items: { [key: string]: any }) => {
+    // skip when empty (first load)
+    if (!items.state) {
+        return;
+    }
+
+    // initialize state from stored json
+    state.updateFrom(items.state);
+});
+
+const ignoreLastError = () => {
+    return chrome.runtime.lastError;
+};
+
+function saveState() {
+    chrome.storage.local.set({ state });
+    chrome.runtime.sendMessage(new StateUpdateMessage(state), ignoreLastError);
+}
 
 /**
  * Internal tracking of the payable found in each tab.
@@ -34,7 +55,7 @@ function monitor() {
         }
 
         state.currentPeriod.trackUsage(payable, 1);
-        state.save();
+        saveState();
     }
 
     chrome.windows.getLastFocused((window: chrome.windows.Window) => {
@@ -85,6 +106,16 @@ function onRuntimeMessage(message: any, sender: chrome.runtime.MessageSender, se
                 .then(data => sendResponse({ data }))
                 .catch(error => sendResponse({ error }));
             break;
+        case MessageType.StateRequest:
+            chrome.runtime.sendMessage(new StateUpdateMessage(state));
+            sendResponse(state);
+            break;
+        case MessageType.StateUpdate:
+            const updateMessage = msg as StateUpdateMessage;
+            state.updateFrom(updateMessage.state);
+            saveState();
+            sendResponse(true);
+            break;
         default:
             console.log("Unrecognized message: " + message.id, message);
             sendResponse(false);
@@ -101,7 +132,7 @@ function onTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab:
         delete tabs[tabId];
 
         // request scan of new payable
-        chrome.tabs.sendMessage(tabId, new PayableRescanMessage());
+        chrome.tabs.sendMessage(tabId, new PayableRescanMessage(), ignoreLastError);
     }
 }
 
