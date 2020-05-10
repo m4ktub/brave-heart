@@ -1,5 +1,6 @@
 dist/unpacked/
+dist/chrome/
+dist/firefox/
 dist/*.zip
 node_modules/
-
 .directory

@@ -1,0 +1,5 @@
+{
+  "permissions": [
+    "tabs", "activeTab", "storage", "chrome://favicon/"
+  ]
+}

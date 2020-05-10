@@ -6,7 +6,7 @@
   "homepage_url": "https://github.com/m4ktub/brave-heart",
   "version": "",
   "permissions": [
-    "tabs", "activeTab", "storage", "chrome://favicon/"
+    "tabs", "activeTab", "storage"
   ],
   "icons": {
     "16": "images/icon16.png",

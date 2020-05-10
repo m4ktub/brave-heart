@@ -4,6 +4,7 @@
 //
 
 const package = require('./package.json');
+const fs = require('fs');
 const path = require('path');
 const ExtensionReloader  = require('webpack-extension-reloader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -70,7 +71,7 @@ var config = {
   plugins: [
     new VueLoaderPlugin(),
     new CopyWebpackPlugin([
-      { from: 'manifest.json', transform: updateVersion },
+      { from: 'manifest.json', transform: updateManifest },
       { from: 'pages/**/*.html' },
       { from: 'images/**/*.*' },
       { from: '_locales/**/*.*' }
@@ -78,16 +79,32 @@ var config = {
   ]
 };
 
-function updateVersion(input) {
+var browser;
+function updateManifest(input) {
+  // original file
   const text = input.toString();
   const data = JSON.parse(text);
 
+  // extra file
+  const browserFile = path.resolve(__dirname, `src/manifest.${browser}.json`);
+  const browserData = fs.existsSync(browserFile) 
+    ? JSON.parse(fs.readFileSync(browserFile)) 
+    : {};
+  
+  // modify
   data.version = package.version;
+  Object.assign(data, browserData);
 
+  // format final value
   return JSON.stringify(data, null, 2);
 }
 
 module.exports = (env, argv) => {
+  // adjust configuration for env
+  browser = env.browser || 'chrome';
+  config.output.path = path.resolve(__dirname, 'dist', browser);
+
+  // adjust configuration for mode
   switch (argv.mode) {
     case 'development':
       // allow extension to automatically reload
@@ -100,7 +117,7 @@ module.exports = (env, argv) => {
       config.plugins.push(new CleanWebpackPlugin());
       break;
     default:
-      throw new Error("Unexpected mode: " + argv.mode)
+      throw new Error("Unexpected mode: " + argv.mode);
   }
 
   // return the actual configuration

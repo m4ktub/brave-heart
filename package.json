@@ -9,9 +9,11 @@
     "url": "git@github.com:m4ktub/brave-heart.git"
   },
   "scripts": {
-    "build": "npm run webpack && node dist/zip.js",
-    "webpack": "webpack --mode production",
-    "watch": "webpack --watch --mode development"
+    "build": "npm run webpack-chrome && npm run webpack-firefox && node dist/zip.js",
+    "webpack-chrome": "webpack --mode production --env.browser=chrome",
+    "webpack-firefox": "webpack --mode production --env.browser=firefox",
+    "watch-chrome": "webpack --watch --mode development --env.browser=chrome",
+    "watch-firefox": "webpack --watch --mode development --env.browser=firefox"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
