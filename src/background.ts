@@ -34,10 +34,7 @@ function updateState(items: any) {
  * Saves the state to local storage and broadcasts a message with the new state.
  */
 function saveState(update?: any) {
-    if (update) {
-        updateState(update);
-    }
-
+    updateState({ state: update });
     chrome.storage.local.set({ state });
     Browser.sendMessage(new StateUpdateMessage(state));
 }
