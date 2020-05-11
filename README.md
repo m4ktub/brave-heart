@@ -10,3 +10,14 @@ The extension monitors the pages you're visiting and looks for Bitcoin Cash addr
   * It uses Bitcoin Cash;
   * Producers receive 100% of your contribution;
 
+Build
+-----
+
+Building the extension locally can be done through `npm` by installing dependencies and running the `build` script.
+
+```
+$> npm install
+$> npm run build
+```
+
+The zip files will be located under the `dist` directory. Each browser will have its specific file.
