@@ -74,9 +74,9 @@ export class Dispatcher {
 
             if (!handler) {
                 sendResponse(false);
+            } else {
+                handler(msg, sender, sendResponse);
             }
-
-            handler(msg, sender, sendResponse);
         }
     }
 
