@@ -19,7 +19,6 @@ export class CashAccount {
 
   async resolve(text: string): Promise<string | null> {
     const match = CashAccount.RegExp.exec(text);
-    console.log("match", match);
     if (! match) {
       return null;
     }
