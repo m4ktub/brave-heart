@@ -1,6 +1,6 @@
 {
   "name": "brave-heart",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A chrome extension to directly reward web producers with no trusted intermediaries",
   "author": "Cláudio Gil",
   "license": "MIT",
