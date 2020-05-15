@@ -1,6 +1,12 @@
 Brave Hearth Changelog
 ======================
 
+Version 1.0.1
+-------------
+
+ * Remove console logging
+ * Fix issues that would produce extension errors
+
 Version 1.0.0
 -------------
 
