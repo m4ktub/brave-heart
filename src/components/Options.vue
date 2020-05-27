@@ -21,7 +21,7 @@
       </p>
       <ul>
         <li v-for="url in sortedExcludedUrls" v-bind:key="url">
-          <img :src="'chrome://favicon/size/12/' + url" />
+          <img v-bind:src="getFaviconUrl(url)" />
           <span class="text">{{ url }}</span>
           <span class="actions">
             <a v-on:click="removeFromExcludedUrls(url)">
@@ -90,6 +90,9 @@ export default {
       let pos = state.settings.excludedUrls.indexOf(url);
       state.settings.excludedUrls.splice(pos, 1);
       this.save();
+    },
+    getFaviconUrl(url: string) {
+      return Browser.getFaviconUrl(url, 12);
     },
     t(key: string) {
       return I18n.translate(key);

@@ -1,6 +1,11 @@
 Brave Hearth Changelog
 ======================
 
+Version 1.0.2
+-------------
+
+ * Fixed favicon in options page for Firefox
+
 Version 1.0.1
 -------------
 

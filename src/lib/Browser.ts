@@ -43,12 +43,13 @@ class Browser {
    * in different browsers.
    *
    * @param location the url of the page
+   * @param size the side size in pixels for the favicon
    */
-  getFaviconUrl(location: string) {
+  getFaviconUrl(location: string, size: number = 32) {
     if (isChrome) {
-      return `chrome://favicon/size/32/${encodeURI(location)}`;
+      return `chrome://favicon/size/${size}/${encodeURI(location)}`;
     } else {
-      return `https://www.google.com/s2/favicons?sz=32&domain=${encodeURI(location)}`;
+      return `https://www.google.com/s2/favicons?sz=${size}&domain=${encodeURI(location)}`;
     }
   }
 
