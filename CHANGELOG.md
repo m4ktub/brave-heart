@@ -5,6 +5,7 @@ Version 1.0.2
 -------------
 
  * Fixed favicon in options page for Firefox
+ * Fixed exchange rate calculation when not using USD
 
 Version 1.0.1
 -------------

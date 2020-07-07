@@ -108,6 +108,7 @@ import Browser from '../lib/Browser';
 
 // global state
 var state = new State();
+var rateUpdated = false;
 
 // handle state updates
 const dispatcher = new Dispatcher();
@@ -121,24 +122,19 @@ dispatcher.register(MessageType.StateUpdate, (msg: StateUpdateMessage) => {
     state.seed = BitboxPaymentService.generateSeed();
     Browser.sendMessage(new StateUpdateMessage(state));
   }
+
+  // ensure fiat rate is updated
+  if (!rateUpdated) {
+    BitboxPaymentService.getRate(state.settings.currency, (rate) => {
+      rateUpdated = true;
+      state.settings.rate = rate / 100;
+      Browser.sendMessage(new StateUpdateMessage(state));
+    });
+  }
 });
 
 // request state update
 Browser.sendMessage(new StateRequestMessage());
-
-// fiat rate update
-function getRate() {
-  if (Object.keys(state.currentPeriod.usage).length) {
-    setTimeout(getRate, 1000);
-  }
-
-  BitboxPaymentService.getRate(state.settings.currency, (rate) => {
-    state.settings.rate = rate / 100;
-    Browser.sendMessage(new StateUpdateMessage(state));
-  });
-}
-
-getRate();
 
 // utilities
 function flatten<T>(aa: T[][]): T[] {
